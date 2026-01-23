@@ -1,0 +1,6 @@
+.main-content {
+  margin-left: 245px; /* Ширина навбара */
+  margin-bottom: 158px; /* Высота футера */
+  min-height: calc(100vh - 158px);
+  height: fit-content;
+}

@@ -1,0 +1,32 @@
+.feed-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.feed-page {
+  display: flex;
+  flex: 1;
+  background-color: #fff;
+}
+
+.feed-grid {
+  flex: 1;
+  display: grid;
+  /* Создаем 2 колонки одинаковой ширины */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px; /* Отступ между постами */
+  max-width: 935px; /* Стандарт для Instagram-сетки */
+  margin: 0 auto;
+  padding: 20px;
+  align-items: start;
+}
+
+/* Адаптивность: на мобильных устройствах (меньше 768px) один пост в ряд */
+@media (max-width: 768px) {
+  .feed-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 10px;
+  }
+}

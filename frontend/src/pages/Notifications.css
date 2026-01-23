@@ -1,0 +1,72 @@
+.notifications-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Затемнение */
+  z-index: 999;
+}
+
+.notifications-drawer {
+  position: fixed;
+  left: 245px; /* Ширина вашего NavBar */
+  top: 0;
+  bottom: 0;
+  width: 397px;
+  background: white;
+  z-index: 1000;
+  border-right: 1px solid #dbdbdb;
+  border-radius: 0 16px 16px 0;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.section-label {
+  font-weight: 600;
+  margin: 16px 0;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.notif-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.notif-content {
+  flex: 1;
+  font-size: 14px;
+}
+
+.notif-username {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.notif-time {
+  color: #8e8e8e;
+  margin-left: 4px;
+}
+
+.notif-post-img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 4px;
+}

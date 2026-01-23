@@ -1,0 +1,139 @@
+.modal-overlay {
+  position: fixed;
+  /* Ограничиваем область видимости оверлея */
+  top: 0;
+  left: 245px; /* Равно ширине NavBar */
+  right: 0;
+  bottom: 50px; /* Равно высоте Footer */
+
+  background: rgba(0, 0, 0, 0.5); /* Затемнение только центральной части */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Ниже, чем у NavBar и Footer */
+}
+
+.modal-content {
+  /* Чтобы модалка не прилипала к краям */
+  max-height: 90%;
+  width: 95%;
+  max-width: 1100px;
+  background: white;
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.modal-image-container {
+  flex: 1.2;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.modal-info-container {
+  flex: 0.8;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-left: 1px solid #efefef;
+}
+.comment-item-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding: 0 16px;
+}
+
+.comment-main {
+  display: flex;
+  gap: 12px;
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.comment-footer {
+  display: flex;
+  gap: 15px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #8e8e8e; /* Серый цвет как на макете */
+}
+
+.comment-like-icon {
+  cursor: pointer;
+  padding-top: 5px;
+  color: #262626;
+}
+
+.comment-like-icon:hover {
+  opacity: 0.6;
+}
+/* Кнопка три точки в шапке */
+.post-options-icon {
+  cursor: pointer;
+  color: #262626;
+  margin-left: 10px;
+}
+
+/* Оверлей меню (поверх всего) */
+.action-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+}
+
+/* Контейнер меню */
+.action-menu-content {
+  background: white;
+  width: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Элементы списка */
+.menu-item {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #dbdbdb;
+  padding: 14px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+/* Красный текст для кнопки Delete */
+.delete-btn {
+  color: #ed4956;
+  font-weight: bold;
+}
+
+.menu-item:active {
+  background-color: #fafafa;
+}

@@ -1,0 +1,165 @@
+.profile-page {
+  max-width: 935px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.profile-header {
+  display: flex;
+  margin-bottom: 44px;
+  align-items: flex-start;
+}
+
+.avatar-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  padding: 3px;
+  border: 2px solid #e1306c; /* Градиентная рамка как на макете */
+  object-fit: cover;
+}
+
+.profile-info {
+  flex: 2;
+}
+
+.info-top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.username-title {
+  font-size: 28px;
+  font-weight: 300;
+}
+
+.edit-btn,
+.message-btn,
+.follow-btn {
+  padding: 5px 15px;
+  border: 1px solid #dbdbdb;
+  background: #fff;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.follow-btn {
+  background: #0095f6;
+  color: white;
+  border: none;
+}
+
+.follow-btn.unfollow {
+  background: #efefef;
+  color: black;
+}
+
+.stats-list {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.profile-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  border-top: 1px solid #dbdbdb;
+  padding-top: 20px;
+}
+
+.grid-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+/* Стили для редактирования */
+.edit-profile-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background: white;
+}
+
+.edit-avatar-section {
+  display: flex;
+  align-items: center;
+  background: #efefef;
+  padding: 15px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.edit-avatar-section img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.change-photo-btn {
+  color: #0095f6;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-fields input,
+.edit-fields textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0 20px;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 12px;
+  background: #0095f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.profile-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.profile-post-item {
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-post-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-post-item:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3); /* Затемнение при наведении */
+}

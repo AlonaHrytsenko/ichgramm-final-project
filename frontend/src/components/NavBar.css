@@ -1,0 +1,45 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 245px; /* Твоя ширина навбара */
+  z-index: 3000; /* Самый высокий слой */
+  background: #fff;
+  border-right: 1px solid #dbdbdb;
+}
+
+.logo-link {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 30px;
+  display: block;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.nav-item {
+  color: black;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.nav-item:hover {
+  background-color: #f2f2f2;
+  transform: scale(1.1);
+}
+
+.nav-item.active {
+  color: #000;
+}

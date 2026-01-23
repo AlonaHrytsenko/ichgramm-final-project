@@ -1,0 +1,40 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
+import './Footer.css'
+
+const Footer = ({ onSearchClick, onNotifClick }) => {
+  return (
+    <footer className="footer">
+      <nav className="footer-nav">
+        <Link to="/" className="footer-link">
+          Home
+        </Link>
+
+        {/* Вместо Link используем обработчик клика */}
+        <span className="footer-link action-link" onClick={onSearchClick}>
+          Search
+        </span>
+
+        <Link to="/explore" className="footer-link">
+          Explore
+        </Link>
+        <Link to="/messages" className="footer-link">
+          Messages
+        </Link>
+
+        {/* Обработчик для уведомлений */}
+        <span className="footer-link action-link" onClick={onNotifClick}>
+          Notifications
+        </span>
+
+        <Link to="/create" className="footer-link">
+          Create
+        </Link>
+      </nav>
+
+      <div className="footer-copy">© 2026 ICHgram</div>
+    </footer>
+  )
+}
+
+export default Footer
