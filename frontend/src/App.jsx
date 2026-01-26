@@ -17,6 +17,7 @@ import Search from './pages/Search.jsx'
 import Notifications from './pages/Notifications.jsx'
 import Footer from './components/Footer.jsx'
 import PostModal from './components/PostModal.jsx'
+import ForgotPassword from './pages/ForgotPassword.jsx'
 
 const socket = io('http://localhost:5000', {
   auth: { token: localStorage.getItem('token') },
@@ -35,8 +36,10 @@ function App() {
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [selectedPost, setSelectedPost] = useState(null)
 
-  const hideNavBar =
-    location.pathname === '/login' || location.pathname === '/register'
+  const hideComponent =
+    location.pathname === '/login' ||
+    location.pathname === '/register' ||
+    location.pathname === '/forgot-password'
 
   // 1. Загрузка постов при старте
   useEffect(() => {
@@ -121,7 +124,7 @@ function App() {
 
   return (
     <div className="app">
-      {!hideNavBar && (
+      {!hideComponent && (
         <NavBar
           unreadCount={unreadNotifications}
           onNotificationsClick={toggleNotifications}
@@ -162,6 +165,7 @@ function App() {
           <Route path="/create" element={<CreatePost />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/chat" element={<Chat />} />
         </Routes>
       </div>
@@ -177,7 +181,12 @@ function App() {
         />
       )}
 
-      <Footer onSearchClick={toggleSearch} onNotifClick={toggleNotifications} />
+      {!hideComponent && (
+        <Footer
+          onSearchClick={toggleSearch}
+          onNotifClick={toggleNotifications}
+        />
+      )}
     </div>
   )
 }

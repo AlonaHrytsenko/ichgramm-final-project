@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import './Auth.css'
+import picture from '../assets/Background.jpg'
+import logo from '../assets/ICHGRAM.jpg'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -30,37 +33,69 @@ const Login = () => {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        maxWidth: '400px',
-        margin: '50px auto',
-        padding: '20px',
-        border: '1px solid #ddd',
-      }}
-    >
-      <h2>Войти</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        style={{ width: '100%', padding: '10px', margin: '10px 0' }}
-      />
-      <input
-        type="password"
-        placeholder="Пароль"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        style={{ width: '100%', padding: '10px', margin: '10px 0' }}
-      />
-      <button type="submit" style={{ width: '100%', padding: '10px' }}>
-        Войти
-      </button>
-    </form>
+    <div className="auth-page-container">
+      <div className="auth-content">
+        {/* Левая часть с картинкой телефонов (скроем на мобилках в CSS) */}
+        <div className="auth-visuals">
+          <img src={picture} alt="Phones preview" className="phones-img" />
+        </div>
+
+        {/* Правая часть с формой */}
+        <div className="auth-form-column">
+          <div className="auth-card main-card">
+            <img src={logo} alt="Logo" />
+
+            <form onSubmit={handleSubmit} className="login-inner-form">
+              {error && <p className="auth-error">{error}</p>}
+
+              <input
+                type="email"
+                placeholder="Username, or email"
+                className="auth-input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="auth-input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+
+              <button type="submit" className="auth-submit-btn">
+                Log in
+              </button>
+
+              <div className="auth-divider">
+                <div className="line"></div>
+                <div className="text">OR</div>
+                <div className="line"></div>
+              </div>
+
+              <Link
+                to="/forgot-password"
+                title="Trouble logging in?"
+                className="forgot-password"
+              >
+                Forgot password?
+              </Link>
+            </form>
+          </div>
+
+          <div className="auth-card signup-card">
+            <p>
+              Don't have an account?{' '}
+              <Link to="/register" className="signup-link">
+                Sign up
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
