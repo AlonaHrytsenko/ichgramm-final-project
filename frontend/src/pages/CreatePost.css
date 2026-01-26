@@ -13,9 +13,15 @@
 
 .create-post-modal {
   background: white;
-  width: 900px;
+  /* width: 900px;
   max-width: 95%;
-  height: 560px;
+  height: 560px; */
+
+  max-width: 900px;
+  max-height: 560px;
+  width: 70vw;
+  height: 70vh;
+
   border-radius: 12px;
   display: flex;
   flex-direction: column;

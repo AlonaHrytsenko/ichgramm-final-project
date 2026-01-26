@@ -5,9 +5,10 @@ import './CreatePost.css'
 import uploadIcon from '../assets/upload-icon.svg'
 import smile from '../assets/smile.svg'
 
-const CreatePost = ({ onClose }) => {
-  const [caption, setCaption] = useState('')
-  const [image, setImage] = useState(null)
+const CreatePost = ({ onClose, editData }) => {
+  const [caption, setCaption] = useState(editData ? editData.caption : '')
+  const [image, setImage] = useState(editData ? editData.image : null)
+  const isEditMode = !!editData
   const [preview, setPreview] = useState(null)
   const [loading, setLoading] = useState(false)
   const [userName, setUserName] = useState('Anonymous')
@@ -67,22 +68,42 @@ const CreatePost = ({ onClose }) => {
     })
 
   const handleSubmit = async () => {
-    if (!caption || !image) {
+    // Определяем, находимся ли мы в режиме редактирования
+    const isEditMode = !!editData
+
+    // Валидация: при создании нужны и текст, и фото.
+    // При редактировании достаточно только текста (фото уже есть в базе).
+    if (!caption || (!isEditMode && !image)) {
       alert('Please add a caption and an image')
       return
     }
+
     setLoading(true)
     try {
-      const imageData = await fileToBase64(image)
-      await axios.post(
-        'http://localhost:5000/api/posts',
-        { caption, image: imageData },
-        { headers: { Authorization: `Bearer ${token}` } },
-      )
-      alert('Post shared!')
+      const token = localStorage.getItem('token')
+
+      if (isEditMode) {
+        await axios.put(
+          `http://localhost:5000/api/posts/${editData._id}`,
+          { caption },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        alert('Post updated!')
+      } else {
+        const imageData = await fileToBase64(image)
+        await axios.post(
+          'http://localhost:5000/api/posts',
+          { caption, image: imageData },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        alert('Post shared!')
+      }
+
       onClose()
+      window.location.reload()
     } catch (err) {
-      alert('Error creating post', err)
+      console.error('Error saving post:', err)
+      alert(isEditMode ? 'Error updating post' : 'Error creating post')
       setLoading(false)
     }
   }
@@ -96,7 +117,7 @@ const CreatePost = ({ onClose }) => {
           <button className="back-btn" onClick={onClose}>
             ✕
           </button>
-          <h3>Create new post</h3>
+          <h3>{isEditMode ? 'Edit Info' : 'Create New Post'}</h3>
           <button
             className="share-btn"
             onClick={handleSubmit}
@@ -109,22 +130,35 @@ const CreatePost = ({ onClose }) => {
         <div className="modal-body">
           <div
             className="image-upload-section"
-            onClick={() => fileInputRef.current.click()}
+            /* Если мы в режиме редактирования, клик по картинке можно отключить, 
+     так как Instagram обычно не дает менять фото после публикации */
+            onClick={() => !isEditMode && fileInputRef.current.click()}
+            style={{ cursor: isEditMode ? 'default' : 'pointer' }}
           >
-            {preview ? (
-              <img src={preview} alt="Preview" className="post-preview-img" />
+            {/* Условие: показываем изображение, если есть новый превью ИЛИ старое фото из базы */}
+            {preview || (isEditMode && editData?.image) ? (
+              <img
+                src={preview || editData?.image}
+                alt="Preview"
+                className="post-preview-img"
+              />
             ) : (
               <div className="upload-placeholder">
                 <img src={uploadIcon} alt="upload-icon" />
+                <p>Select photos and videos here</p>
               </div>
             )}
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageChange}
-              accept="image/*"
-              style={{ display: 'none' }}
-            />
+
+            {/* Скрытый инпут рендерим только если это НЕ режим редактирования */}
+            {!isEditMode && (
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                style={{ display: 'none' }}
+              />
+            )}
           </div>
 
           {/* Правая часть: Данные поста */}

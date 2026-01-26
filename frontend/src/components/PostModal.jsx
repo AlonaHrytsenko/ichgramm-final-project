@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fa'
 import { formatDistanceToNowStrict } from 'date-fns'
 import axios from 'axios'
+import smile from '../assets/smile.svg'
 import './PostModal.css'
 
 const PostModal = ({
@@ -31,7 +32,9 @@ const PostModal = ({
   const [comment, setComment] = useState('')
   const [comments, setComments] = useState(post?.comments || [])
 
-  // Если вдруг post не передался, не рендерим ничего
+  const [showEmoji, setShowEmoji] = useState(false)
+  const emojis = ['😊', '❤️', '😂', '🙌', '🔥', '😍', '✨', '👏']
+
   if (!post || !post.user) return null
 
   const isLiked = likes.includes(currentUserId)
@@ -181,6 +184,7 @@ const PostModal = ({
                       >
                         <strong>{c.user?.username || 'User'}</strong>
                       </Link>
+                      <span style={{ marginLeft: '8px' }}>{c.text}</span>
                     </p>
                     <div className="comment-footer">
                       <span className="comment-time">
@@ -222,9 +226,45 @@ const PostModal = ({
             <div className="likes-count">
               <strong>{likes.length} likes</strong>
             </div>
+            <div className="post-time-ago">
+              {formatCommentTime(post.updatedAt || post.createdAt)}
+            </div>
           </div>
 
           <div className="modal-comment-input">
+            {/* Кнопка и выпадающее окно смайликов */}
+            <div className="emoji-container" style={{ position: 'relative' }}>
+              <button
+                className="emoji-trigger"
+                onClick={() => setShowEmoji(!showEmoji)}
+                type="button"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                }}
+              >
+                <img src={smile} alt="emoji" />
+              </button>
+
+              {showEmoji && (
+                <div className="emoji-dropdown">
+                  {emojis.map((e) => (
+                    <span
+                      key={e}
+                      onClick={() => {
+                        setComment((prev) => prev + e) // Добавляем смайлик к тексту
+                        setShowEmoji(false) // Закрываем окно
+                      }}
+                    >
+                      {e}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <input
               placeholder="Add a comment..."
               value={comment}

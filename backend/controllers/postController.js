@@ -43,7 +43,33 @@ export const getPosts = async (req, res) => {
     res.status(500).json({ message: 'Error fetching posts' })
   }
 }
+export const updatePost = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { caption } = req.body
+    const post = await Post.findById(id)
 
+    if (!post) {
+      return res.status(404).json({ message: 'Пост не найден' })
+    }
+    if (post.user.toString() !== req.userId) {
+      return res
+        .status(403)
+        .json({ message: 'Вы можете редактировать только свои посты' })
+    }
+
+    post.caption = caption
+    await post.save()
+    const updatedPost = await Post.findById(id).populate(
+      'user',
+      'username avatar',
+    )
+    res.status(200).json(updatedPost)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Ошибка при обновлении поста' })
+  }
+}
 export const deletePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id)

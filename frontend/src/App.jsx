@@ -36,6 +36,7 @@ function App() {
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [selectedPost, setSelectedPost] = useState(null)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [editingPost, setEditingPost] = useState(null)
 
   const hideComponent =
     location.pathname === '/login' ||
@@ -179,10 +180,21 @@ function App() {
           onCommentUpdate={handlePostUpdate}
           onDelete={handlePostDelete}
           currentUserId={currentUserId}
+          onEdit={(post) => {
+            setEditingPost(post)
+            setIsCreateModalOpen(true)
+            setSelectedPost(null) // Закрываем просмотр поста
+          }}
         />
       )}
       {isCreateModalOpen && (
-        <CreatePost onClose={() => setIsCreateModalOpen(false)} />
+        <CreatePost
+          onClose={() => {
+            setIsCreateModalOpen(false)
+            setEditingPost(null) // Очищаем при закрытии
+          }}
+          editData={editingPost} // Передаем данные для редактирования
+        />
       )}
       {!hideComponent && (
         <Footer
