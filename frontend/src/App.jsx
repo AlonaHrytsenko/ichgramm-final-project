@@ -35,6 +35,7 @@ function App() {
   const [isNotifOpen, setIsNotifOpen] = useState(false)
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [selectedPost, setSelectedPost] = useState(null)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
   const hideComponent =
     location.pathname === '/login' ||
@@ -129,6 +130,7 @@ function App() {
           unreadCount={unreadNotifications}
           onNotificationsClick={toggleNotifications}
           onSearchClick={toggleSearch}
+          onCreateClick={() => setIsCreateModalOpen(true)}
           isSearchOpen={isSearchOpen}
           isNotifOpen={isNotifOpen}
         />
@@ -162,7 +164,6 @@ function App() {
             element={<Explore onPostClick={(post) => setSelectedPost(post)} />}
           />
           <Route path="/messages" element={<Messages socket={socket} />} />
-          <Route path="/create" element={<CreatePost />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -180,7 +181,9 @@ function App() {
           currentUserId={currentUserId}
         />
       )}
-
+      {isCreateModalOpen && (
+        <CreatePost onClose={() => setIsCreateModalOpen(false)} />
+      )}
       {!hideComponent && (
         <Footer
           onSearchClick={toggleSearch}

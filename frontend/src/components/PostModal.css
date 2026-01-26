@@ -4,7 +4,7 @@
   top: 0;
   left: 245px; /* Равно ширине NavBar */
   right: 0;
-  bottom: 50px; /* Равно высоте Footer */
+  bottom: 158px; /* Равно высоте Footer */
 
   background: rgba(0, 0, 0, 0.5); /* Затемнение только центральной части */
   display: flex;

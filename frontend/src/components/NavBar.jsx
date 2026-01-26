@@ -17,6 +17,7 @@ const NavBar = ({
   onSearchClick,
   isSearchOpen,
   isNotifOpen,
+  onCreateClick,
 }) => {
   const userId = localStorage.getItem('userId')
 
@@ -66,10 +67,14 @@ const NavBar = ({
           <span>Notifications</span>
         </div>
 
-        <Link to="/create" className="nav-item">
+        <div
+          className="nav-item"
+          onClick={onCreateClick}
+          style={{ cursor: 'pointer' }}
+        >
           <FaPlusSquare size={26} />
           <span>Create</span>
-        </Link>
+        </div>
 
         <Link to={`/profile/${userId}`} className="nav-item">
           <FaUserCircle size={26} />

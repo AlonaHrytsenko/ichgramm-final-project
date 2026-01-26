@@ -1,36 +1,53 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import './CreatePost.css'
+import uploadIcon from '../assets/upload-icon.svg'
+import smile from '../assets/smile.svg'
 
-const CreatePost = () => {
+const CreatePost = ({ onClose }) => {
   const [caption, setCaption] = useState('')
   const [image, setImage] = useState(null)
   const [preview, setPreview] = useState(null)
   const [loading, setLoading] = useState(false)
   const [userName, setUserName] = useState('Anonymous')
+  const [userAvatar, setUserAvatar] = useState(null)
+  const [showEmoji, setShowEmoji] = useState(false)
 
+  const navigate = useNavigate()
+  const fileInputRef = useRef(null)
   const userId = localStorage.getItem('userId')
-  const token = localStorage.getItem('token') // JWT токен после логина
+  const token = localStorage.getItem('token')
 
-  // 1️⃣ Получаем имя пользователя с сервера
   useEffect(() => {
-    const fetchUserName = async () => {
-      console.log('Fetching user name...', userId)
+    const fetchUserData = async () => {
       if (!userId || !token) return
       try {
         const res = await axios.get(
           `http://localhost:5000/api/users/${userId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
         )
-        console.log('User response:', res.data)
         setUserName(res.data.username)
+
+        const avatarUrl = res.data.avatar
+        if (
+          avatarUrl &&
+          !avatarUrl.startsWith('http') &&
+          !avatarUrl.startsWith('data:')
+        ) {
+          setUserAvatar(`http://localhost:5000/${avatarUrl}`)
+        } else {
+          setUserAvatar(avatarUrl)
+        }
       } catch (err) {
-        console.error('Error fetching user name', err)
+        console.error('Error fetching user data', err)
       }
     }
-    fetchUserName()
+    fetchUserData()
   }, [userId, token])
 
-  // 2️⃣ Обработка выбора изображения
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -41,7 +58,6 @@ const CreatePost = () => {
     }
   }
 
-  // 3️⃣ Преобразование файла в Base64
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader()
@@ -50,141 +66,132 @@ const CreatePost = () => {
       reader.readAsDataURL(file)
     })
 
-  // 4️⃣ Отправка поста
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!caption) {
-      alert('Caption is required')
+  const handleSubmit = async () => {
+    if (!caption || !image) {
+      alert('Please add a caption and an image')
       return
     }
-    if (!image) {
-      alert('Image is required')
-      return
-    }
-
     setLoading(true)
     try {
       const imageData = await fileToBase64(image)
-
       await axios.post(
         'http://localhost:5000/api/posts',
-        {
-          caption,
-          image: imageData,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { caption, image: imageData },
+        { headers: { Authorization: `Bearer ${token}` } },
       )
-
-      resetForm()
+      alert('Post shared!')
+      onClose()
     } catch (err) {
-      console.error(err)
-      alert('Error creating post')
+      alert('Error creating post', err)
       setLoading(false)
     }
   }
 
-  const resetForm = () => {
-    setCaption('')
-    setImage(null)
-    setPreview(null)
-    setLoading(false)
-    alert('Post created!')
-  }
+  const emojis = ['😊', '❤️', '😂', '👍', '🔥', '✨', '🙌', '😎']
 
   return (
-    <div style={styles.page}>
-      {/* <NavBar /> */}
-      <div style={styles.overlay}>
-        <div style={styles.modal}>
-          <h2>Create Post</h2>
-          <p style={{ fontWeight: 'bold' }}>{userName}</p>
-          <form onSubmit={handleSubmit}>
+    <div className="create-post-overlay" onClick={onClose}>
+      <div className="create-post-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <button className="back-btn" onClick={onClose}>
+            ✕
+          </button>
+          <h3>Create new post</h3>
+          <button
+            className="share-btn"
+            onClick={handleSubmit}
+            disabled={loading || !image}
+          >
+            {loading ? 'Posting...' : 'Share'}
+          </button>
+        </div>
+
+        <div className="modal-body">
+          <div
+            className="image-upload-section"
+            onClick={() => fileInputRef.current.click()}
+          >
+            {preview ? (
+              <img src={preview} alt="Preview" className="post-preview-img" />
+            ) : (
+              <div className="upload-placeholder">
+                <img src={uploadIcon} alt="upload-icon" />
+              </div>
+            )}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              accept="image/*"
+              style={{ display: 'none' }}
+            />
+          </div>
+
+          {/* Правая часть: Данные поста */}
+          <div className="post-details-section">
+            <div
+              className="user-info-row"
+              onClick={() => navigate(`/profile/${userId}`)}
+            >
+              <div className="mini-avatar">
+                {userAvatar ? (
+                  <img
+                    src={userAvatar}
+                    alt={userName}
+                    className="real-avatar"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                    }}
+                  />
+                ) : null}
+
+                {!userAvatar && (
+                  <div className="placeholder-avatar">
+                    {userName ? userName[0].toUpperCase() : 'U'}
+                  </div>
+                )}
+              </div>
+              <span className="username-link">{userName}</span>
+            </div>
+
             <textarea
-              placeholder="What's on your mind?"
+              placeholder="Write a caption..."
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-              style={styles.textarea}
+              maxLength="200"
             />
-            {preview && (
-              <img src={preview} alt="Preview" style={styles.preview} />
-            )}
-            <div style={styles.controls}>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              <button type="submit" disabled={loading}>
-                {loading ? 'Posting...' : 'Post'}
-              </button>
+
+            <div className="post-footer">
+              <div className="emoji-container">
+                <button
+                  className="emoji-trigger"
+                  onClick={() => setShowEmoji(!showEmoji)}
+                >
+                  <img src={smile} alt="emoji" />
+                </button>
+                {showEmoji && (
+                  <div className="emoji-dropdown">
+                    {emojis.map((e) => (
+                      <span
+                        key={e}
+                        onClick={() => {
+                          setCaption((c) => c + e)
+                          setShowEmoji(false)
+                        }}
+                      >
+                        {e}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <span className="char-count">{caption.length}/200</span>
             </div>
-          </form>
-          <div style={styles.emoji}>
-            <button onClick={() => setCaption((c) => c + '😊')}>😊</button>
-            <button onClick={() => setCaption((c) => c + '❤️')}>❤️</button>
-            <button onClick={() => setCaption((c) => c + '😂')}>😂</button>
-            <button onClick={() => setCaption((c) => c + '👍')}>👍</button>
           </div>
         </div>
       </div>
     </div>
   )
-}
-
-const styles = {
-  page: {
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100vh',
-  },
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  },
-  modal: {
-    backgroundColor: '#fff',
-    padding: '30px',
-    borderRadius: '10px',
-    width: '400px',
-    maxWidth: '90%',
-    textAlign: 'center',
-    position: 'relative',
-  },
-  textarea: {
-    width: '100%',
-    minHeight: '80px',
-    padding: '10px',
-    margin: '10px 0',
-    borderRadius: '5px',
-    border: '1px solid #ccc',
-    resize: 'none',
-  },
-  preview: {
-    width: '100%',
-    maxHeight: '200px',
-    objectFit: 'cover',
-    marginBottom: '10px',
-    borderRadius: '5px',
-  },
-  controls: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  emoji: {
-    marginTop: '10px',
-    display: 'flex',
-    gap: '10px',
-    justifyContent: 'center',
-  },
 }
 
 export default CreatePost
