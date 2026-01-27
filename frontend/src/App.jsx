@@ -192,6 +192,7 @@ function App() {
             path="/profile/:id"
             element={
               <Profile
+                posts={posts}
                 onPostUpdate={handlePostUpdate}
                 onPostClick={setSelectedPost}
                 onFollowUpdate={handleFollowUpdate}

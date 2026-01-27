@@ -3,10 +3,9 @@ import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import './Profile.css'
 
-const Profile = ({ onPostClick, onPostUpdate, onFollowUpdate }) => {
+const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
   const { id } = useParams()
   const [profile, setProfile] = useState(null)
-  const [posts, setPosts] = useState([])
   const [isEditing, setIsEditing] = useState(false)
   const [editData, setEditData] = useState({
     username: '',
@@ -20,41 +19,40 @@ const Profile = ({ onPostClick, onPostUpdate, onFollowUpdate }) => {
   const currentUserId = localStorage.getItem('userId')
   const token = localStorage.getItem('token')
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [profRes, postsRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/profile/${id}`),
-          axios.get(`http://localhost:5000/api/posts?user=${id}`),
-        ])
+  const userPosts = posts.filter((post) => {
+    const postUserId = post.user._id || post.user
+    return postUserId?.toString() === id?.toString()
+  })
 
-        setProfile(profRes.data)
-        setPosts(postsRes.data)
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/api/profile/${id}`)
+        setProfile(res.data)
         setEditData({
-          username: profRes.data.username || '',
-          fullName: profRes.data.fullName || '',
-          bio: profRes.data.bio || '',
-          avatar: profRes.data.avatar || '',
-          website: profRes.data.website || '',
+          username: res.data.username || '',
+          fullName: res.data.fullName || '',
+          bio: res.data.bio || '',
+          avatar: res.data.avatar || '',
+          website: res.data.website || '',
         })
 
-        if (currentUserId && profRes.data.followers.includes(currentUserId)) {
+        if (currentUserId && res.data.followers.includes(currentUserId)) {
           setIsFollowing(true)
         }
       } catch (err) {
-        console.error('Error fetching data:', err)
+        console.error('Error fetching profile:', err)
       }
     }
-    fetchData()
+    fetchProfileData()
   }, [id, currentUserId])
 
-  // --- ЛОГИКА ОБНОВЛЕНИЯ ДАННЫХ ИЗВНЕ ---
-  // Этот эффект следит за изменениями в App.jsx и обновляет локальный список постов профиля
   useEffect(() => {
-    if (onPostUpdate) {
-      // Мы можем использовать глобальную функцию обновления здесь
+    if (profile) {
+      const isNowFollowing = profile.followers?.includes(currentUserId)
+      setIsFollowing(!!isNowFollowing)
     }
-  }, [onPostUpdate])
+  }, [profile, currentUserId])
 
   const handleSave = async () => {
     if (!token) return alert('You are not logged in')
@@ -84,13 +82,16 @@ const Profile = ({ onPostClick, onPostUpdate, onFollowUpdate }) => {
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )
+
       setProfile((prev) => ({
         ...prev,
         followers: res.data.isFollowing
-          ? [...prev.followers, currentUserId]
-          : prev.followers.filter((fId) => fId !== currentUserId),
+          ? [...(prev.followers || []), currentUserId]
+          : (prev.followers || []).filter((fId) => fId !== currentUserId),
       }))
+
       setIsFollowing(res.data.isFollowing)
+
       if (onFollowUpdate) {
         onFollowUpdate(id, res.data.isFollowing)
       }
@@ -101,7 +102,6 @@ const Profile = ({ onPostClick, onPostUpdate, onFollowUpdate }) => {
 
   if (!profile) return <div className="loader">Loading...</div>
 
-  // Если открыто редактирование
   if (isEditing) {
     return (
       <div className="edit-profile-container">
@@ -209,13 +209,13 @@ const Profile = ({ onPostClick, onPostUpdate, onFollowUpdate }) => {
 
           <ul className="stats-list">
             <li>
-              <strong>{posts.length}</strong> posts
+              <strong>{userPosts.length}</strong> posts
             </li>
             <li>
-              <strong>{profile.followers.length}</strong> followers
+              <strong>{profile.followers?.length || 0}</strong> followers
             </li>
             <li>
-              <strong>{profile.following.length}</strong> following
+              <strong>{profile.following?.length || 0}</strong> following
             </li>
           </ul>
 
@@ -237,12 +237,12 @@ const Profile = ({ onPostClick, onPostUpdate, onFollowUpdate }) => {
       </header>
 
       <div className="profile-posts-grid">
-        {posts.map((post) => (
+        {userPosts.map((post) => (
           <div key={post._id} className="grid-item">
             <img
               src={post.image}
               alt="post"
-              onClick={() => onPostClick(post)} // ПЕРЕДАЕМ В APP.JSX
+              onClick={() => onPostClick(post)}
             />
           </div>
         ))}
