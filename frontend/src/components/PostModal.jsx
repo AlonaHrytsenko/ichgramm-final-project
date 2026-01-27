@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   FaHeart,
@@ -16,12 +16,11 @@ const PostModal = ({
   post,
   onClose,
   currentUserId,
-  onCommentUpdate,
+  onPostUpdate,
   onDelete,
   onEdit,
+  onFollowUpdate,
 }) => {
-  // 1. БЕЗОПАСНАЯ ИНИЦИАЛИЗАЦИЯ СОСТОЯНИЙ
-  // Используем ?. и || [] чтобы приложение не падало, если данных нет
   const [likes, setLikes] = useState(post?.likes || [])
   const [showMenu, setShowMenu] = useState(false)
   const [isFollowing, setIsFollowing] = useState(
@@ -31,15 +30,16 @@ const PostModal = ({
   )
   const [comment, setComment] = useState('')
   const [comments, setComments] = useState(post?.comments || [])
-
   const [showEmoji, setShowEmoji] = useState(false)
   const emojis = ['😊', '❤️', '😂', '🙌', '🔥', '😍', '✨', '👏']
-
-  if (!post || !post.user) return null
-
   const isLiked = likes.includes(currentUserId)
   const isOwnPost = post.user._id === currentUserId
-
+  useEffect(() => {
+    const followed = post.user.followers?.some(
+      (id) => id.toString() === currentUserId?.toString(),
+    )
+    setIsFollowing(followed)
+  }, [post.user])
   const handleCopyLink = () => {
     const link = `${window.location.origin}/post/${post._id}`
     navigator.clipboard.writeText(link)
@@ -56,6 +56,9 @@ const PostModal = ({
         { headers: { Authorization: `Bearer ${token}` } },
       )
       setLikes(res.data.likes)
+      if (onPostUpdate) {
+        onPostUpdate(post._id, comments, res.data.likes)
+      }
     } catch (err) {
       console.error('Ошибка лайка', err)
     }
@@ -70,6 +73,9 @@ const PostModal = ({
         { headers: { Authorization: `Bearer ${token}` } },
       )
       setIsFollowing(res.data.isFollowing)
+      if (onFollowUpdate) {
+        onFollowUpdate(post.user._id, res.data.isFollowing)
+      }
     } catch (err) {
       console.error('Ошибка подписки', err)
     }
@@ -85,7 +91,8 @@ const PostModal = ({
         { headers: { Authorization: `Bearer ${token}` } },
       )
       setComments(res.data.comments)
-      if (onCommentUpdate) onCommentUpdate(post._id, res.data.comments)
+      if (onPostUpdate)
+        onPostUpdate(post._id, res.data.comments, res.data.likes)
       setComment('')
     } catch (err) {
       console.error('Ошибка комментария', err)
@@ -101,6 +108,9 @@ const PostModal = ({
         { headers: { Authorization: `Bearer ${token}` } },
       )
       setComments(res.data.comments)
+      if (onPostUpdate) {
+        onPostUpdate(post._id, res.data.comments, likes)
+      }
     } catch (err) {
       console.error('Ошибка лайка комментария', err)
     }
@@ -121,7 +131,7 @@ const PostModal = ({
       return e
     }
   }
-
+  if (!post || !post.user) return null
   return (
     <div className="modal-overlay" onClick={onClose}>
       <button className="close-modal" onClick={onClose}>
@@ -165,6 +175,38 @@ const PostModal = ({
           </div>
 
           <div className="modal-comments-list">
+            {post.caption && (
+              <div className="comment-item-container post-description">
+                <div className="comment-main">
+                  <Link to={`/profile/${post.user._id}`} onClick={onClose}>
+                    <img
+                      src={
+                        post.user.avatar || 'https://via.placeholder.com/150'
+                      }
+                      className="comment-avatar"
+                      alt="avatar"
+                    />
+                  </Link>
+                  <div className="comment-content">
+                    <p>
+                      <Link
+                        to={`/profile/${post.user._id}`}
+                        onClick={onClose}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                      >
+                        <strong>{post.user.username}</strong>
+                      </Link>
+                      <span style={{ marginLeft: '8px' }}>{post.caption}</span>
+                    </p>
+                    <div className="comment-footer">
+                      <span className="comment-time">
+                        {formatCommentTime(post.createdAt)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
             {comments.map((c) => (
               <div key={c._id} className="comment-item-container">
                 <div className="comment-main">

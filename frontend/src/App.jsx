@@ -80,17 +80,27 @@ function App() {
   // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
 
   // Универсальное обновление комментариев/лайков
-  const handlePostUpdate = (postId, updatedComments) => {
+  const handlePostUpdate = (postId, updatedComments, updatedLikes) => {
     // Обновляем в основном массиве
     setPosts((prevPosts) =>
       prevPosts.map((p) =>
-        p._id === postId ? { ...p, comments: updatedComments } : p,
+        p._id === postId
+          ? {
+              ...p,
+              comments: updatedComments || p.comments,
+              likes: updatedLikes || p.likes,
+            }
+          : p,
       ),
     )
     // Обновляем в модалке, если она открыта
     setSelectedPost((prev) =>
       prev && prev._id === postId
-        ? { ...prev, comments: updatedComments }
+        ? {
+            ...prev,
+            comments: updatedComments || prev.comments,
+            likes: updatedLikes || prev.likes,
+          }
         : prev,
     )
   }
@@ -124,7 +134,26 @@ function App() {
     setIsNotifOpen(false)
     setSelectedPost(post)
   }
-
+  const handleFollowUpdate = (userId, isFollowing) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) => {
+        if (post.user._id === userId) {
+          return {
+            ...post,
+            user: {
+              ...post.user,
+              followers: isFollowing
+                ? [...(post.user.followers || []), currentUserId]
+                : (post.user.followers || []).filter(
+                    (id) => id !== currentUserId,
+                  ),
+            },
+          }
+        }
+        return post
+      }),
+    )
+  }
   return (
     <div className="app">
       {!hideComponent && (
@@ -150,7 +179,14 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Feed posts={posts} onPostClick={setSelectedPost} />}
+            element={
+              <Feed
+                posts={posts}
+                onPostClick={setSelectedPost}
+                onPostUpdate={handlePostUpdate}
+                onFollowUpdate={handleFollowUpdate}
+              />
+            }
           />
           <Route
             path="/profile/:id"
@@ -158,6 +194,7 @@ function App() {
               <Profile
                 onPostUpdate={handlePostUpdate}
                 onPostClick={setSelectedPost}
+                onFollowUpdate={handleFollowUpdate}
               />
             }
           />
@@ -177,11 +214,13 @@ function App() {
       {/* Глобальная модалка поста */}
       {selectedPost && selectedPost.user && (
         <PostModal
+          key={selectedPost._id}
           post={selectedPost}
           onClose={() => setSelectedPost(null)}
-          onCommentUpdate={handlePostUpdate}
+          onPostUpdate={handlePostUpdate}
           onDelete={handlePostDelete}
           currentUserId={currentUserId}
+          onFollowUpdate={handleFollowUpdate}
           onEdit={(post) => {
             setEditingPost(post)
             setIsCreateModalOpen(true)

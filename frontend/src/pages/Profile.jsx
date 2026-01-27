@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import './Profile.css'
 
-const Profile = ({ onPostClick, onPostUpdate }) => {
+const Profile = ({ onPostClick, onPostUpdate, onFollowUpdate }) => {
   const { id } = useParams()
   const [profile, setProfile] = useState(null)
   const [posts, setPosts] = useState([])
@@ -91,6 +91,9 @@ const Profile = ({ onPostClick, onPostUpdate }) => {
           : prev.followers.filter((fId) => fId !== currentUserId),
       }))
       setIsFollowing(res.data.isFollowing)
+      if (onFollowUpdate) {
+        onFollowUpdate(id, res.data.isFollowing)
+      }
     } catch (err) {
       console.error('Follow error:', err)
     }
