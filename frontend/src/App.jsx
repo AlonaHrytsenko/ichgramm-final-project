@@ -18,6 +18,7 @@ import Notifications from './pages/Notifications.jsx'
 import Footer from './components/Footer.jsx'
 import PostModal from './components/PostModal.jsx'
 import ForgotPassword from './pages/ForgotPassword.jsx'
+import NotFound from './pages/NotFound.jsx'
 
 const socket = io('http://localhost:5000', {
   auth: { token: localStorage.getItem('token') },
@@ -169,6 +170,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
 
@@ -200,6 +202,7 @@ function App() {
         <Footer
           onSearchClick={toggleSearch}
           onNotifClick={toggleNotifications}
+          onCreateClick={() => setIsCreateModalOpen(true)}
         />
       )}
     </div>

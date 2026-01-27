@@ -1,0 +1,37 @@
+.not-found-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 45px;
+  width: 60vw;
+  height: 80vh;
+  max-height: 300px;
+  margin: 90px auto;
+}
+.not-found-container img {
+  height: 100%;
+}
+.not-found-container h2 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 47px;
+  color: #000000;
+}
+
+.not-found-container p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #737373;
+  line-height: 1.5;
+  max-width: 475px;
+}
+
+.not-found-container a {
+  color: #00376b;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.not-found-container a:hover {
+  text-decoration: underline;
+}

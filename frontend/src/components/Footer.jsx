@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import './Footer.css'
 
-const Footer = ({ onSearchClick, onNotifClick }) => {
+const Footer = ({ onSearchClick, onNotifClick, onCreateClick }) => {
   return (
     <footer className="footer">
       <nav className="footer-nav">
@@ -27,9 +27,9 @@ const Footer = ({ onSearchClick, onNotifClick }) => {
           Notifications
         </span>
 
-        <Link to="/create" className="footer-link">
+        <span className="footer-link action-link" onClick={onCreateClick}>
           Create
-        </Link>
+        </span>
       </nav>
 
       <div className="footer-copy">© 2026 ICHgram</div>
