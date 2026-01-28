@@ -13,16 +13,42 @@
 .feed-grid {
   flex: 1;
   display: grid;
-  /* Создаем 2 колонки одинаковой ширины */
   grid-template-columns: repeat(2, 1fr);
-  gap: 28px; /* Отступ между постами */
-  max-width: 935px; /* Стандарт для Instagram-сетки */
+  gap: 28px;
+  max-width: 935px;
   margin: 0 auto;
   padding: 20px;
   align-items: start;
 }
+.feed-end-message {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  margin-top: 20px;
+}
 
-/* Адаптивность: на мобильных устройствах (меньше 768px) один пост в ряд */
+.end-icon {
+  width: 80px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.end-title {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0;
+  color: #000000;
+}
+
+.end-subtitle {
+  font-size: 14px;
+  color: #737373;
+  margin-top: 5px;
+}
 @media (max-width: 768px) {
   .feed-grid {
     grid-template-columns: 1fr;
