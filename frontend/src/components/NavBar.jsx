@@ -10,6 +10,7 @@ import {
   FaUserCircle,
 } from 'react-icons/fa'
 import './NavBar.css'
+import logo from '../assets/ICHGRAM.jpg'
 
 const NavBar = ({
   unreadCount,
@@ -18,6 +19,7 @@ const NavBar = ({
   isSearchOpen,
   isNotifOpen,
   onCreateClick,
+  userAvatar,
 }) => {
   const userId = localStorage.getItem('userId')
 
@@ -25,7 +27,7 @@ const NavBar = ({
     <aside className="sidebar">
       <div className="logo-container">
         <Link to="/" className="logo-link">
-          ICHGRAM
+          <img src={logo} alt="logo" />
         </Link>
       </div>
       <nav className="nav-menu">
@@ -76,8 +78,16 @@ const NavBar = ({
           <span>Create</span>
         </div>
 
-        <Link to={`/profile/${userId}`} className="nav-item">
-          <FaUserCircle size={26} />
+        <Link
+          to={`/profile/${userId}`}
+          className="nav-item"
+          style={{ marginTop: 40 }}
+        >
+          {userAvatar ? (
+            <img src={userAvatar} alt="Profile" className="nav-avatar" />
+          ) : (
+            <FaUserCircle size={26} />
+          )}
           <span>Profile</span>
         </Link>
       </nav>

@@ -3,43 +3,47 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 245px; /* Твоя ширина навбара */
-  z-index: 3000; /* Самый высокий слой */
+  width: 245px;
+  z-index: 3000;
   background: #fff;
   border-right: 1px solid #dbdbdb;
 }
 
 .logo-link {
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-  font-size: 14px;
-  margin-bottom: 30px;
+  padding: 25px;
   display: block;
 }
 
 .nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
   align-items: flex-start;
+  padding-left: 25px;
 }
 
 .nav-item {
   color: black;
-  padding: 12px;
-  border-radius: 8px;
+  font-weight: 400;
   cursor: pointer;
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 16px;
   transition: transform 0.2s;
 }
 
 .nav-item:hover {
-  background-color: #f2f2f2;
   transform: scale(1.1);
+  color: #535bf2;
 }
 
 .nav-item.active {
   color: #000;
+}
+.nav-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
 }

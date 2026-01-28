@@ -1,19 +1,16 @@
 .footer {
-  /* Фиксированное позиционирование относительно экрана */
   position: fixed;
   bottom: 0;
-  left: 245px; /* Сдвиг вправо на ширину NavBar */
+  left: 245px;
   right: 0;
-  height: 158px; /* Фиксированная высота */
-
+  height: 158px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 25px;
   background-color: #fff;
-  border-top: 1px solid #dbdbdb;
-
-  z-index: 3000; /* Чтобы быть поверх модалок, если нужно */
+  z-index: 3000;
 }
 
 .footer-nav {
@@ -25,12 +22,13 @@
 .footer-link {
   text-decoration: none;
   color: #737373;
-  font-size: 13px; /* В Instagram футер обычно чуть мельче */
+  font-size: 13px;
   font-weight: 400;
 }
 
 .footer-link:hover {
-  text-decoration: underline;
+  transform: scale(1.1);
+  color: #535bf2;
 }
 
 .footer-copy {

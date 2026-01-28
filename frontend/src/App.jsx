@@ -38,6 +38,7 @@ function App() {
   const [selectedPost, setSelectedPost] = useState(null)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [editingPost, setEditingPost] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null)
 
   const hideComponent =
     location.pathname === '/login' ||
@@ -77,6 +78,21 @@ function App() {
 
     closeOnNavigation()
   }, [location.pathname])
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      if (token && currentUserId) {
+        try {
+          const res = await axios.get(
+            `http://localhost:5000/api/profile/${currentUserId}`,
+          )
+          setCurrentUser(res.data)
+        } catch (err) {
+          console.error('Ошибка при загрузке профиля для NavBar:', err)
+        }
+      }
+    }
+    fetchCurrentUser()
+  }, [token, currentUserId])
   // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
 
   // Универсальное обновление комментариев/лайков
@@ -164,6 +180,7 @@ function App() {
           onCreateClick={() => setIsCreateModalOpen(true)}
           isSearchOpen={isSearchOpen}
           isNotifOpen={isNotifOpen}
+          userAvatar={currentUser?.avatar}
         />
       )}
 
