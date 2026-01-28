@@ -3,6 +3,8 @@ import axios from 'axios'
 import Chat from '../components/Chat.jsx'
 import './Messages.css'
 import { useParams } from 'react-router-dom'
+import { formatDistanceToNowStrict } from 'date-fns'
+import { FiEdit } from 'react-icons/fi'
 
 const Messages = ({ socket, currentUser }) => {
   const [chats, setChats] = useState([])
@@ -86,43 +88,7 @@ const Messages = ({ socket, currentUser }) => {
             className="new-chat-btn"
             onClick={() => setIsNewChatOpen(true)}
           >
-            <svg
-              aria-label="New message"
-              color="rgb(0, 0, 0)"
-              fill="rgb(0, 0, 0)"
-              height="24"
-              role="img"
-              viewBox="0 0 24 24"
-              width="24"
-            >
-              <path
-                d="M12.202 3.203H5.25a3 3 0 0 0-3 3V18.75a3 3 0 0 0 3 3h12.547a3 3 0 0 0 3-3v-6.952"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              ></path>
-              <path
-                d="M10.002 17.226H6.774v-3.228L18.607 2.165a1.417 1.417 0 0 1 2.004 0l1.224 1.225a1.417 1.417 0 0 1 0 2.004Z"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              ></path>
-              <line
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                x1="16.848"
-                x2="20.076"
-                y1="4.408"
-                y2="7.636"
-              ></line>
-            </svg>
+            <FiEdit size={22} />
           </button>
         </div>
 
@@ -131,6 +97,9 @@ const Messages = ({ socket, currentUser }) => {
             const recipient = chat.participants.find(
               (p) => p._id !== currentUserId,
             )
+            const lastMsg = chat.lastMessage
+            const senderName =
+              lastMsg?.sender === currentUserId ? 'You' : recipient?.username
             return (
               <div
                 key={chat._id}
@@ -143,9 +112,27 @@ const Messages = ({ socket, currentUser }) => {
                 />
                 <div className="chat-item-info">
                   <span className="chat-item-name">{recipient?.username}</span>
-                  <span className="chat-item-last-msg">
-                    {chat.lastMessage?.text || 'Sent a message'}
-                  </span>
+                  <div className="chat-item-last">
+                    <span className="chat-item-last-msg">
+                      {lastMsg
+                        ? `${senderName} sent a message`
+                        : 'No messages yet'}
+                    </span>
+                    {lastMsg?.createdAt && (
+                      <span className="chat-item-time">
+                        ·
+                        {formatDistanceToNowStrict(new Date(lastMsg.createdAt))
+                          .replace(' minutes', 'm')
+                          .replace(' minute', 'm')
+                          .replace(' hours', 'h')
+                          .replace(' hour', 'h')
+                          .replace(' days', 'd')
+                          .replace(' day', 'd')
+                          .replace(' weeks', 'w')
+                          .replace(' week', 'w')}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             )

@@ -137,7 +137,7 @@ const Chat = ({ chat, currentUserId, socket }) => {
       <div className="input-wrapper">
         <input
           type="text"
-          placeholder="Message..."
+          placeholder="Write message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleSendMessage}

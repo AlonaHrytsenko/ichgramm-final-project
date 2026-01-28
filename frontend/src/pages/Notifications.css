@@ -33,7 +33,9 @@
   font-weight: 600;
   margin: 16px 0;
 }
-
+.notifications-list {
+  overflow-y: auto;
+}
 .notification-item {
   display: flex;
   align-items: center;
