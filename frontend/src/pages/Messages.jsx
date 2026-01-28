@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Chat from '../components/Chat.jsx'
 import './Messages.css'
+import { useParams } from 'react-router-dom'
 
-const Messages = ({ socket }) => {
+const Messages = ({ socket, currentUser }) => {
   const [chats, setChats] = useState([])
   const [selectedChat, setSelectedChat] = useState(null)
   const [isNewChatOpen, setIsNewChatOpen] = useState(false)
   const [users, setUsers] = useState([]) // Список всех пользователей для выбора
   const currentUserId = localStorage.getItem('userId')
   const token = localStorage.getItem('token')
+  const { userId } = useParams()
 
   // Загрузка чатов и пользователей
   useEffect(() => {
@@ -40,22 +42,45 @@ const Messages = ({ socket }) => {
         { recipientId },
         { headers: { Authorization: `Bearer ${token}` } },
       )
-      // Если чат новый, добавляем в список
-      if (!chats.find((c) => c._id === res.data._id)) {
-        setChats([res.data, ...chats])
-      }
-      setSelectedChat(res.data)
+
+      const newChat = res.data
+
+      // Обновляем список чатов, только если такого чата еще нет в списке
+      setChats((prevChats) => {
+        if (!prevChats.find((c) => c._id === newChat._id)) {
+          return [newChat, ...prevChats]
+        }
+        return prevChats
+      })
+
+      setSelectedChat(newChat)
       setIsNewChatOpen(false)
     } catch (err) {
       console.error('Ошибка создания чата:', err)
     }
   }
 
+  useEffect(() => {
+    if (userId && chats.length > 0) {
+      const existingChat = chats.find((chat) =>
+        chat.participants.some((p) => p._id === userId),
+      )
+
+      if (existingChat) {
+        setSelectedChat(existingChat)
+      } else {
+        startChat(userId)
+      }
+    }
+  }, [userId, chats])
+
   return (
     <div className="messages-page-container">
       <div className="chats-sidebar">
         <div className="sidebar-header">
-          <span className="current-user-name">itcareerhub</span>
+          <span className="current-user-name">
+            {currentUser?.username || localStorage.getItem('username')}
+          </span>
           {/* Кнопка "Новый чат" */}
           <button
             className="new-chat-btn"

@@ -220,7 +220,10 @@ function App() {
             path="/explore"
             element={<Explore onPostClick={(post) => setSelectedPost(post)} />}
           />
-          <Route path="/messages" element={<Messages socket={socket} />} />
+          <Route
+            path="/messages/:userId?"
+            element={<Messages socket={socket} currentUser={currentUser} />}
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />

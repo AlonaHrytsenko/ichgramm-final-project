@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import './Profile.css'
 
@@ -15,7 +15,7 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
     website: '',
   })
   const [isFollowing, setIsFollowing] = useState(false)
-
+  const navigate = useNavigate()
   const currentUserId = localStorage.getItem('userId')
   const token = localStorage.getItem('token')
 
@@ -105,14 +105,16 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
   if (isEditing) {
     return (
       <div className="edit-profile-container">
-        <h1>Edit profile</h1>
+        <h2>Edit profile</h2>
         <div className="edit-avatar-section">
-          <img
-            src={editData.avatar || 'https://via.placeholder.com/150'}
-            alt="avatar"
-          />
           <div className="edit-avatar-info">
+            <img
+              src={editData.avatar || 'https://via.placeholder.com/150'}
+              alt="avatar"
+            />
             <span className="edit-username">{profile.username}</span>
+          </div>
+          <div>
             <input
               type="file"
               id="file"
@@ -124,9 +126,9 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
               }}
               style={{ display: 'none' }}
             />
-            <label htmlFor="file" className="change-photo-btn">
-              New photo
-            </label>
+            <button className="change-photo-btn">
+              <label htmlFor="file">New photo</label>
+            </button>
           </div>
         </div>
 
@@ -166,12 +168,14 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
           />
           <span className="char-count">{editData.bio.length} / 150</span>
         </div>
-        <button className="save-btn" onClick={handleSave}>
-          Save
-        </button>
-        <button className="cancel-btn" onClick={() => setIsEditing(false)}>
-          Cancel
-        </button>
+        <div className="buttons">
+          <button className="save-btn" onClick={handleSave}>
+            Save
+          </button>
+          <button className="cancel-btn" onClick={() => setIsEditing(false)}>
+            Cancel
+          </button>
+        </div>
       </div>
     )
   }
@@ -197,12 +201,17 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
             ) : (
               <div className="action-btns">
                 <button
-                  className={`follow-btn ${isFollowing ? 'unfollow' : ''}`}
+                  className={`followBtn ${isFollowing ? 'unfollow' : ''}`}
                   onClick={handleFollow}
                 >
                   {isFollowing ? 'Following' : 'Follow'}
                 </button>
-                <button className="message-btn">Message</button>
+                <button
+                  className="message-btn"
+                  onClick={() => navigate(`/messages/${id}`)}
+                >
+                  Message
+                </button>
               </div>
             )}
           </div>
@@ -220,7 +229,7 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
           </ul>
 
           <div className="bio-section">
-            <h4 className="full-name">{profile.fullName}</h4>
+            <p className="full-name">{profile.fullName}</p>
             <p className="bio-text">{profile.bio}</p>
             {profile.website && (
               <a
