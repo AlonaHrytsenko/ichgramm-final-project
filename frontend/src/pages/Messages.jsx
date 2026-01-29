@@ -11,7 +11,7 @@ const Messages = ({ socket, currentUser }) => {
   const [chats, setChats] = useState([])
   const [selectedChat, setSelectedChat] = useState(null)
   const [isNewChatOpen, setIsNewChatOpen] = useState(false)
-  const [users, setUsers] = useState([]) // Список всех пользователей для выбора
+  const [users, setUsers] = useState([])
   const currentUserId = localStorage.getItem('userId')
   const token = localStorage.getItem('token')
   const { userId } = useParams()
@@ -178,19 +178,42 @@ const Messages = ({ socket, currentUser }) => {
               </button>
             </div>
             <div className="user-search-list">
-              {users.map((user) => (
-                <div
-                  key={user._id}
-                  className="user-select-item"
-                  onClick={() => startChat(user._id)}
-                >
-                  <img src={user.avatar} alt="" />
-                  <div className="user-info">
-                    <span className="username">{user.username}</span>
-                    <span className="fullname">{user.fullName}</span>
-                  </div>
-                </div>
-              ))}
+              {users.length > 0 ? (
+                users.map((user) => {
+                  const userHasAvatar =
+                    user.avatar &&
+                    user.avatar.trim() !== '' &&
+                    user.avatar !== 'undefined'
+
+                  return (
+                    <div
+                      key={user._id}
+                      className="user-select-item"
+                      onClick={() => startChat(user._id)}
+                    >
+                      <div className="user-select-item-img-wrapper">
+                        {userHasAvatar ? (
+                          <img
+                            src={user.avatar}
+                            alt={user.username}
+                            className="user-select-item-img"
+                          />
+                        ) : (
+                          <FaUserCircle className="user-select-item-img placeholder-icon" />
+                        )}
+                      </div>
+                      <div className="user-info">
+                        <span className="username">{user.username}</span>
+                        <span className="fullname">
+                          {user.fullName || 'No name provided'}
+                        </span>
+                      </div>
+                    </div>
+                  )
+                })
+              ) : (
+                <div className="no-users-found">No users found</div>
+              )}
             </div>
           </div>
         </div>
