@@ -4,13 +4,16 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5); /* Затемнение */
+  background: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
-
+.notifications-list a {
+  text-decoration: none;
+  color: inherit;
+}
 .notifications-drawer {
   position: fixed;
-  left: 245px; /* Ширина вашего NavBar */
+  left: 245px;
   top: 0;
   bottom: 0;
   width: 397px;

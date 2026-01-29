@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { FaUserCircle } from 'react-icons/fa'
 import axios from 'axios'
 import './Profile.css'
 
@@ -99,7 +100,14 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
       console.error('Follow error:', err)
     }
   }
-
+  const hasAvatar = (avatarPath) => {
+    return (
+      avatarPath &&
+      avatarPath.trim() !== '' &&
+      avatarPath !== 'undefined' &&
+      !avatarPath.includes('placeholder')
+    )
+  }
   if (!profile) return <div className="loader">Loading...</div>
 
   if (isEditing) {
@@ -108,10 +116,11 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
         <h2>Edit profile</h2>
         <div className="edit-avatar-section">
           <div className="edit-avatar-info">
-            <img
-              src={editData.avatar || 'https://via.placeholder.com/150'}
-              alt="avatar"
-            />
+            {hasAvatar(editData.avatar) ? (
+              <img src={editData.avatar} className="edit-avatar" alt="avatar" />
+            ) : (
+              <FaUserCircle className="edit-avatar placeholder" />
+            )}
             <span className="edit-username">{profile.username}</span>
           </div>
           <div>
@@ -184,11 +193,11 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
     <div className="profile-page">
       <header className="profile-header">
         <div className="avatar-wrapper">
-          <img
-            className="profile-avatar"
-            src={profile.avatar || 'https://via.placeholder.com/150'}
-            alt="avatar"
-          />
+          {hasAvatar(profile.avatar) ? (
+            <img className="profile-avatar" src={profile.avatar} alt="avatar" />
+          ) : (
+            <FaUserCircle className="profile-avatar placeholder" />
+          )}
         </div>
 
         <section className="profile-info">

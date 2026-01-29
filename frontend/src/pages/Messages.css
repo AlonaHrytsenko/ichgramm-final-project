@@ -24,7 +24,6 @@
   align-items: center;
   padding: 12px 20px;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
 .chat-item:hover,
@@ -32,7 +31,7 @@
   background: #efefef;
 }
 
-.chat-item img {
+.chat-item-img {
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -77,7 +76,7 @@
   font-weight: 600;
 }
 
-.chat-header img {
+.header-avatar {
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -94,7 +93,7 @@
   align-items: center;
   justify-content: center;
 }
-.chat-user-info-center img {
+.center-info-avatar {
   width: 96px;
   height: 96px;
   border-radius: 50%;

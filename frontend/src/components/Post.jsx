@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { FaHeart, FaRegHeart, FaRegComment } from 'react-icons/fa'
 import { formatDistanceToNowStrict } from 'date-fns'
+import { FaUserCircle } from 'react-icons/fa'
 import './Post.css'
 
 const Post = ({
@@ -105,12 +106,18 @@ const Post = ({
       {/* Шапка поста */}
       <div className="post-header">
         <div className="header-left">
-          <Link to={`/profile/${post.user._id}`}>
-            <img
-              src={post.user.avatar || 'https://via.placeholder.com/150'}
-              className="avatar"
-              alt="user"
-            />
+          <Link to={`/profile/${post.user._id}`} className="post-avatar-link">
+            {post.user?.avatar &&
+            post.user.avatar.trim() !== '' &&
+            post.user.avatar !== 'undefined' ? (
+              <img
+                src={post.user.avatar}
+                className="avatar"
+                alt={post.user.username}
+              />
+            ) : (
+              <FaUserCircle className="avatar placeholder-icon" />
+            )}
           </Link>
           <div className="userinfo">
             <Link to={`/profile/${post.user._id}`} className="username-link">

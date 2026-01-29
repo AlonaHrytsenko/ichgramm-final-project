@@ -57,10 +57,15 @@
   align-items: center;
   padding: 8px 12px;
 }
+
 .header-left {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.header-left a {
+  text-decoration: none;
+  color: inherit;
 }
 .userinfo {
   display: flex;

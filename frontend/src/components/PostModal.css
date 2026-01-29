@@ -1,16 +1,20 @@
 .modal-overlay {
   position: fixed;
   top: 0;
-  left: 245px; /* Равно ширине NavBar */
+  left: 245px;
   right: 0;
-  bottom: 158px; /* Равно высоте Footer */
+  bottom: 158px;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2000;
 }
-/* Кнопка закрытия (крестик) в углу экрана */
+.comment-main a,
+.modal-header a {
+  text-decoration: none;
+  color: inherit;
+}
 .close-modal {
   position: absolute;
   top: 20px;
@@ -37,7 +41,7 @@
 
 /* Левая часть: Изображение */
 .modal-image-container {
-  flex: 1.5; /* Больше места под картинку */
+  flex: 1.5;
   background-color: #000;
   display: flex;
   align-items: center;
@@ -47,8 +51,8 @@
 .modal-image-container img {
   width: 100%;
   height: 100%;
-  display: block; /* Убирает лишние зазоры снизу строки */
-  object-fit: cover; /* Заполняет всё пространство (обрезая края) */
+  display: block;
+  object-fit: cover;
   object-position: center;
 }
 
@@ -63,15 +67,20 @@
 }
 
 /* Шапка правой части (Аватар + Ник + Кнопка) */
-.modal-info-container .modal-header {
+.modal-header {
   display: flex;
   align-items: center;
   padding: 14px 16px;
   border-bottom: 1px solid #dbdbdb;
-  gap: 12px;
+  gap: 10px;
 }
-
-.modal-info-container .avatar {
+.modal-header-left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.modal-header-avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -85,16 +94,14 @@
   flex-grow: 1;
 }
 
-.follow-btn {
-  background: none;
-  border: none;
+.followbtn {
   color: #0095f6;
   font-weight: 600;
   cursor: pointer;
   font-size: 14px;
 }
 
-.follow-btn.following {
+.followbtn.following {
   color: #262626;
 }
 

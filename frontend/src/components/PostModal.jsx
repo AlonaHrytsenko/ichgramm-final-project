@@ -6,6 +6,7 @@ import {
   FaRegComment,
   FaTimes,
   FaEllipsisH,
+  FaUserCircle,
 } from 'react-icons/fa'
 import { formatDistanceToNowStrict } from 'date-fns'
 import axios from 'axios'
@@ -131,6 +132,17 @@ const PostModal = ({
       return e
     }
   }
+
+  const renderUserAvatar = (user, className) => {
+    const hasAvatar =
+      user?.avatar && user.avatar.trim() !== '' && user.avatar !== 'undefined'
+
+    if (hasAvatar) {
+      return <img src={user.avatar} alt="avatar" className={className} />
+    }
+    return <FaUserCircle className={`${className} placeholder-icon`} />
+  }
+
   if (!post || !post.user) return null
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -145,27 +157,27 @@ const PostModal = ({
 
         <div className="modal-info-container">
           <div className="modal-header">
-            <Link to={`/profile/${post.user._id}`}>
-              <img
-                src={post.user.avatar || 'https://via.placeholder.com/150'}
-                alt="avatar"
-                className="avatar"
-              />
-            </Link>
-            <Link to={`/profile/${post.user._id}`} className="username-link">
-              <strong>{post.user.username}</strong>
-            </Link>
-
-            {/* 2. ПРОВЕРКА НА СУЩЕСТВОВАНИЕ FOLLOWERS */}
-            {currentUserId !== post.user._id && (
-              <button
-                className={`follow-btn ${isFollowing ? 'following' : ''}`}
-                onClick={handleFollow}
-              >
-                {isFollowing ? 'Following' : 'Follow'}
-              </button>
-            )}
-
+            <div className="modal-header-left">
+              {' '}
+              <Link to={`/profile/${post.user._id}`}>
+                {renderUserAvatar(post.user, 'modal-header-avatar')}
+              </Link>
+              <Link to={`/profile/${post.user._id}`} className="username-link">
+                <strong>{post.user.username}</strong>
+              </Link>
+              {/* 2. ПРОВЕРКА НА СУЩЕСТВОВАНИЕ FOLLOWERS */}
+              {currentUserId !== post.user._id && (
+                <>
+                  <span>•</span>
+                  <p
+                    className={`followbtn ${isFollowing ? 'following' : ''}`}
+                    onClick={handleFollow}
+                  >
+                    {isFollowing ? 'Following' : 'Follow'}
+                  </p>
+                </>
+              )}
+            </div>
             <div className="post-options-container">
               <FaEllipsisH
                 className="post-options-icon"
@@ -179,13 +191,7 @@ const PostModal = ({
               <div className="comment-item-container post-description">
                 <div className="comment-main">
                   <Link to={`/profile/${post.user._id}`} onClick={onClose}>
-                    <img
-                      src={
-                        post.user.avatar || 'https://via.placeholder.com/150'
-                      }
-                      className="comment-avatar"
-                      alt="avatar"
-                    />
+                    {renderUserAvatar(post.user, 'comment-avatar')}
                   </Link>
                   <div className="comment-content">
                     <p>
@@ -211,11 +217,7 @@ const PostModal = ({
               <div key={c._id} className="comment-item-container">
                 <div className="comment-main">
                   <Link to={`/profile/${c.user?._id}`} onClick={onClose}>
-                    <img
-                      src={c.user?.avatar || 'https://via.placeholder.com/150'}
-                      className="comment-avatar"
-                      alt="avatar"
-                    />
+                    {renderUserAvatar(c.user, 'comment-avatar')}
                   </Link>
                   <div className="comment-content">
                     <p>

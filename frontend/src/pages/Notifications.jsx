@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { formatDistanceToNowStrict } from 'date-fns'
-import { useLocation, Link } from 'react-router-dom' // Добавили Link
+import { useLocation, Link } from 'react-router-dom'
+import { FaUserCircle } from 'react-icons/fa'
 import axios from 'axios'
 import './Notifications.css'
 
 const Notifications = ({ isOpen, onClose, onPostClick }) => {
   const [notifications, setNotifications] = useState([])
   const location = useLocation()
-
+  const hasAvatar = (user) =>
+    user?.avatar && user.avatar.trim() !== '' && user.avatar !== 'undefined'
   useEffect(() => {
     if (isOpen) {
       onClose()
@@ -36,7 +38,6 @@ const Notifications = ({ isOpen, onClose, onPostClick }) => {
 
   if (!isOpen) return null
 
-  // Вспомогательная функция для сокращения времени (как в Instagram)
   const formatTime = (date) => {
     return formatDistanceToNowStrict(new Date(date), { addSuffix: false })
       .replace(' seconds', 's')
@@ -63,13 +64,20 @@ const Notifications = ({ isOpen, onClose, onPostClick }) => {
           ) : (
             notifications.map((n) => (
               <div key={n._id} className="notification-item">
-                {/* Ссылка на аватар */}
-                <Link to={`/profile/${n.fromUser?._id}`} onClick={onClose}>
-                  <img
-                    src={n.fromUser?.avatar || 'https://via.placeholder.com/44'}
-                    className="notif-avatar"
-                    alt=""
-                  />
+                <Link
+                  to={`/profile/${n.fromUser?._id}`}
+                  onClick={onClose}
+                  className="notif-avatar-link"
+                >
+                  {hasAvatar(n.fromUser) ? (
+                    <img
+                      src={n.fromUser.avatar}
+                      className="notif-avatar"
+                      alt=""
+                    />
+                  ) : (
+                    <FaUserCircle className="notif-avatar placeholder" />
+                  )}
                 </Link>
 
                 <div className="notif-content">

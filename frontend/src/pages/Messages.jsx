@@ -5,6 +5,7 @@ import './Messages.css'
 import { useParams } from 'react-router-dom'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { FiEdit } from 'react-icons/fi'
+import { FaUserCircle } from 'react-icons/fa'
 
 const Messages = ({ socket, currentUser }) => {
   const [chats, setChats] = useState([])
@@ -97,6 +98,10 @@ const Messages = ({ socket, currentUser }) => {
             const recipient = chat.participants.find(
               (p) => p._id !== currentUserId,
             )
+            const hasAvatar =
+              recipient?.avatar &&
+              recipient.avatar.trim() !== '' &&
+              recipient.avatar !== 'undefined'
             const lastMsg = chat.lastMessage
             const senderName =
               lastMsg?.sender === currentUserId ? 'You' : recipient?.username
@@ -106,10 +111,17 @@ const Messages = ({ socket, currentUser }) => {
                 className={`chat-item ${selectedChat?._id === chat._id ? 'active' : ''}`}
                 onClick={() => setSelectedChat(chat)}
               >
-                <img
-                  src={recipient?.avatar || '/default-avatar.png'}
-                  alt="avatar"
-                />
+                <div className="chat-item-img-wrapper">
+                  {hasAvatar ? (
+                    <img
+                      src={recipient.avatar}
+                      alt="avatar"
+                      className="chat-item-img"
+                    />
+                  ) : (
+                    <FaUserCircle className="chat-item-img" />
+                  )}
+                </div>
                 <div className="chat-item-info">
                   <span className="chat-item-name">{recipient?.username}</span>
                   <div className="chat-item-last">

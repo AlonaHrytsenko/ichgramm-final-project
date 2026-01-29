@@ -12,10 +12,10 @@
   gap: 90px;
 }
 
-/* .avatar-wrapper {
+.avatar-wrapper {
   display: flex;
   justify-content: flex-start;
-} */
+}
 
 .profile-avatar {
   width: 150px;
@@ -121,7 +121,7 @@
   justify-content: center;
   font-weight: 700;
 }
-.edit-avatar-section img {
+.edit-avatar {
   width: 56px;
   height: 56px;
   border-radius: 50%;

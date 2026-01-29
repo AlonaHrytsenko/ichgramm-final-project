@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { FaUserCircle } from 'react-icons/fa'
 import './CreatePost.css'
 import uploadIcon from '../assets/upload-icon.svg'
 import smile from '../assets/smile.svg'
@@ -20,6 +21,7 @@ const CreatePost = ({ onClose, editData }) => {
   const userId = localStorage.getItem('userId')
   const token = localStorage.getItem('token')
 
+  const hasAvatar = (url) => url && url.trim() !== '' && url !== 'undefined'
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId || !token) return
@@ -68,16 +70,11 @@ const CreatePost = ({ onClose, editData }) => {
     })
 
   const handleSubmit = async () => {
-    // Определяем, находимся ли мы в режиме редактирования
     const isEditMode = !!editData
-
-    // Валидация: при создании нужны и текст, и фото.
-    // При редактировании достаточно только текста (фото уже есть в базе).
     if (!caption || (!isEditMode && !image)) {
       alert('Please add a caption and an image')
       return
     }
-
     setLoading(true)
     try {
       const token = localStorage.getItem('token')
@@ -123,19 +120,16 @@ const CreatePost = ({ onClose, editData }) => {
             onClick={handleSubmit}
             disabled={loading || !image}
           >
-            {loading ? 'Posting...' : 'Share'}
+            {loading ? 'Posting...' : isEditMode ? 'Done' : 'Share'}
           </button>
         </div>
 
         <div className="modal-body">
           <div
             className="image-upload-section"
-            /* Если мы в режиме редактирования, клик по картинке можно отключить, 
-     так как Instagram обычно не дает менять фото после публикации */
             onClick={() => !isEditMode && fileInputRef.current.click()}
             style={{ cursor: isEditMode ? 'default' : 'pointer' }}
           >
-            {/* Условие: показываем изображение, если есть новый превью ИЛИ старое фото из базы */}
             {preview || (isEditMode && editData?.image) ? (
               <img
                 src={preview || editData?.image}
@@ -145,11 +139,9 @@ const CreatePost = ({ onClose, editData }) => {
             ) : (
               <div className="upload-placeholder">
                 <img src={uploadIcon} alt="upload-icon" />
-                <p>Select photos and videos here</p>
               </div>
             )}
 
-            {/* Скрытый инпут рендерим только если это НЕ режим редактирования */}
             {!isEditMode && (
               <input
                 type="file"
@@ -168,21 +160,14 @@ const CreatePost = ({ onClose, editData }) => {
               onClick={() => navigate(`/profile/${userId}`)}
             >
               <div className="mini-avatar">
-                {userAvatar ? (
+                {hasAvatar(userAvatar) ? (
                   <img
                     src={userAvatar}
                     alt={userName}
                     className="real-avatar"
-                    onError={(e) => {
-                      e.target.style.display = 'none'
-                    }}
                   />
-                ) : null}
-
-                {!userAvatar && (
-                  <div className="placeholder-avatar">
-                    {userName ? userName[0].toUpperCase() : 'U'}
-                  </div>
+                ) : (
+                  <FaUserCircle className="real-avatar" />
                 )}
               </div>
               <span className="username-link">{userName}</span>
