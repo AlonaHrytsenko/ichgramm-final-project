@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { FaUserCircle } from 'react-icons/fa'
 import './Search.css'
+import button from '../assets/Button.svg'
 
 const Search = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('')
@@ -9,38 +11,38 @@ const Search = ({ isOpen, onClose }) => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // Закрываем поиск при переходе на другую страницу
   useEffect(() => {
     if (isOpen) onClose()
   }, [location.pathname])
 
-  const handleSearch = async (e) => {
-    const value = e.target.value
-    setQuery(value)
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (query.trim().length < 3) {
+        setUsers([])
+        return
+      }
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/users?search=${query}`,
+        )
+        setUsers(res.data)
+      } catch (err) {
+        console.error('Search error', err)
+      }
+    }, 500)
+    return () => clearTimeout(delayDebounceFn)
+  }, [query])
 
-    if (!value.trim()) {
-      setUsers([])
-      return
-    }
-
-    try {
-      const res = await axios.get(
-        `http://localhost:5000/api/users?search=${value}`
-      )
-      setUsers(res.data)
-    } catch (err) {
-      console.error('Search error', err)
-    }
+  const handleSearch = (e) => {
+    setQuery(e.target.value)
   }
 
   if (!isOpen) return null
 
   return (
     <>
-      {/* Затемнение фона */}
       <div className="search-overlay" onClick={onClose}></div>
 
-      {/* Боковая панель поиска */}
       <div className="search-drawer">
         <div className="search-header">
           <h2 className="search-title">Search</h2>
@@ -61,20 +63,16 @@ const Search = ({ isOpen, onClose }) => {
                   setUsers([])
                 }}
               >
-                ✕
+                <img src={button} alt="close button" />
               </button>
             )}
           </div>
         </div>
 
         <div className="search-results">
+          <p className="recent-label">Recent</p>
           {users.length === 0 && query.trim() !== '' ? (
             <p className="no-results">No results found.</p>
-          ) : query.trim() === '' ? (
-            <div className="recent-section">
-              <span className="recent-label">Recent</span>
-              <p className="no-recent">No recent searches.</p>
-            </div>
           ) : (
             users.map((user) => (
               <div
@@ -82,11 +80,19 @@ const Search = ({ isOpen, onClose }) => {
                 className="search-user-item"
                 onClick={() => navigate(`/profile/${user._id}`)}
               >
-                <img
-                  src={user.avatar || 'https://via.placeholder.com/44'}
-                  alt="avatar"
-                  className="search-avatar"
-                />
+                <div className="search-avatar-wrapper">
+                  {user.avatar &&
+                  user.avatar !== '' &&
+                  user.avatar !== 'undefined' ? (
+                    <img
+                      src={user.avatar}
+                      alt="avatar"
+                      className="search-avatar"
+                    />
+                  ) : (
+                    <FaUserCircle className="search-avatar" />
+                  )}
+                </div>
                 <div className="search-user-info">
                   <span className="search-username">{user.username}</span>
                   <span className="search-fullname">

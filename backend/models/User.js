@@ -8,11 +8,11 @@ const userSchema = new mongoose.Schema(
     fullName: { type: String, default: '' },
     bio: { type: String, default: '', maxLength: 150 },
     website: { type: String, default: '', trim: true },
-    avatar: { type: String, default: 'https://via.placeholder.com/100' },
+    avatar: { type: String, default: '' },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 export default mongoose.model('User', userSchema)
