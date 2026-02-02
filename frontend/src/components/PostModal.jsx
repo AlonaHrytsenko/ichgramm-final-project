@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   FaHeart,
@@ -24,23 +24,17 @@ const PostModal = ({
 }) => {
   const [likes, setLikes] = useState(post?.likes || [])
   const [showMenu, setShowMenu] = useState(false)
-  const [isFollowing, setIsFollowing] = useState(
+  const isFollowing =
     post?.user?.followers?.some(
       (id) => id.toString() === currentUserId?.toString(),
-    ) || false,
-  )
+    ) || false
   const [comment, setComment] = useState('')
   const [comments, setComments] = useState(post?.comments || [])
   const [showEmoji, setShowEmoji] = useState(false)
   const emojis = ['😊', '❤️', '😂', '🙌', '🔥', '😍', '✨', '👏']
   const isLiked = likes.includes(currentUserId)
   const isOwnPost = post.user._id === currentUserId
-  useEffect(() => {
-    const followed = post.user.followers?.some(
-      (id) => id.toString() === currentUserId?.toString(),
-    )
-    setIsFollowing(followed)
-  }, [post.user])
+
   const handleCopyLink = () => {
     const link = `${window.location.origin}/post/${post._id}`
     navigator.clipboard.writeText(link)
@@ -73,7 +67,7 @@ const PostModal = ({
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )
-      setIsFollowing(res.data.isFollowing)
+
       if (onFollowUpdate) {
         onFollowUpdate(post.user._id, res.data.isFollowing)
       }

@@ -19,7 +19,12 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
   const navigate = useNavigate()
   const currentUserId = localStorage.getItem('userId')
   const token = localStorage.getItem('token')
-
+  const authorDataInPosts = posts.find(
+    (p) => (p.user._id || p.user) === id,
+  )?.user
+  const currentFollowers =
+    authorDataInPosts?.followers || profile?.followers || []
+  const isFollowing = currentFollowers.includes(currentUserId)
   const userPosts = posts.filter((post) => {
     const postUserId = post.user._id || post.user
     return postUserId?.toString() === id?.toString()
@@ -44,7 +49,6 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
     fetchProfileData()
   }, [id, currentUserId])
 
-  const isFollowing = !!profile?.followers?.includes(currentUserId)
   const handleSave = async () => {
     if (!token) return alert('You are not logged in')
     try {

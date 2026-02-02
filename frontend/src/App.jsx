@@ -169,6 +169,24 @@ function App() {
         return post
       }),
     )
+    setSelectedPost((prev) => {
+      if (!prev) return null
+      const authorId = prev.user._id || prev.user
+      if (authorId === userId) {
+        return {
+          ...prev,
+          user: {
+            ...prev.user,
+            followers: isFollowing
+              ? [...(prev.user.followers || []), currentUserId]
+              : (prev.user.followers || []).filter(
+                  (id) => id !== currentUserId,
+                ),
+          },
+        }
+      }
+      return prev
+    })
   }
   return (
     <div className="app">
