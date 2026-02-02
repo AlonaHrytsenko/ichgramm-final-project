@@ -15,7 +15,7 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
     avatar: '',
     website: '',
   })
-  const [isFollowing, setIsFollowing] = useState(false)
+
   const navigate = useNavigate()
   const currentUserId = localStorage.getItem('userId')
   const token = localStorage.getItem('token')
@@ -37,10 +37,6 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
           avatar: res.data.avatar || '',
           website: res.data.website || '',
         })
-
-        if (currentUserId && res.data.followers.includes(currentUserId)) {
-          setIsFollowing(true)
-        }
       } catch (err) {
         console.error('Error fetching profile:', err)
       }
@@ -48,13 +44,7 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
     fetchProfileData()
   }, [id, currentUserId])
 
-  useEffect(() => {
-    if (profile) {
-      const isNowFollowing = profile.followers?.includes(currentUserId)
-      setIsFollowing(!!isNowFollowing)
-    }
-  }, [profile, currentUserId])
-
+  const isFollowing = !!profile?.followers?.includes(currentUserId)
   const handleSave = async () => {
     if (!token) return alert('You are not logged in')
     try {
@@ -90,8 +80,6 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
           ? [...(prev.followers || []), currentUserId]
           : (prev.followers || []).filter((fId) => fId !== currentUserId),
       }))
-
-      setIsFollowing(res.data.isFollowing)
 
       if (onFollowUpdate) {
         onFollowUpdate(id, res.data.isFollowing)

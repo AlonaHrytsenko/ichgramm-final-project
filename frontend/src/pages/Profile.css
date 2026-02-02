@@ -1,5 +1,5 @@
 .profile-page {
-  max-width: 935px;
+  max-width: 70vw;
   margin: 0 auto;
   padding: 30px 20px;
 }
@@ -10,6 +10,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 90px;
+  max-width: 70vw;
 }
 
 .avatar-wrapper {
@@ -87,7 +88,7 @@
 .profile-posts-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
+  gap: 4px;
   border-top: 1px solid #dbdbdb;
   padding-top: 20px;
 }
@@ -166,11 +167,6 @@
   font-weight: 600;
   cursor: pointer;
 }
-.profile-posts-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-}
 
 .profile-post-item {
   aspect-ratio: 1 / 1;
@@ -192,5 +188,5 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.3); /* Затемнение при наведении */
+  background: rgba(0, 0, 0, 0.3);
 }
