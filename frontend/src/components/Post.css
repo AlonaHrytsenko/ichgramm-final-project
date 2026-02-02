@@ -1,17 +1,18 @@
 .instagram-post {
   background: white;
   border-bottom: 1px solid #dbdbdb;
-  max-width: 470px;
-  width: 100%;
-  height: 700px;
+  width: 400px;
+
+  height: 750px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 .post-image-wrapper {
-  width: 100%;
-  height: 400px;
-
+  width: 400px;
+  height: 500px;
+  min-height: 500px;
+  margin: 0 auto;
   background-color: #fafafa;
   cursor: pointer;
   overflow: hidden;
@@ -21,6 +22,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   cursor: pointer;
 }
 
@@ -55,7 +57,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 8px 12px;
+  padding: 8px 0;
 }
 
 .header-left {
@@ -114,7 +116,12 @@
 }
 
 .post-content {
-  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 0;
+  height: 100%;
 }
 
 .post-actions {

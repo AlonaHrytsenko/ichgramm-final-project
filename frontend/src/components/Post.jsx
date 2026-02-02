@@ -103,7 +103,6 @@ const Post = ({
 
   return (
     <div className="instagram-post">
-      {/* Шапка поста */}
       <div className="post-header">
         <div className="header-left">
           <Link to={`/profile/${post.user._id}`} className="post-avatar-link">
@@ -137,59 +136,58 @@ const Post = ({
         )}
       </div>
 
-      {/* Изображение поста (одного размера) */}
       <div className="post-image-wrapper" onClick={() => onPostClick(post)}>
         <img src={post.image} className="postImage" alt="post" />
       </div>
 
-      {/* Контент под фото */}
       <div className="post-content">
-        <div className="post-actions">
-          <div onClick={handleLike} className="action-icon">
-            {isLiked ? (
-              <FaHeart color="#ed4956" size={24} />
-            ) : (
-              <FaRegHeart size={24} />
+        <div>
+          <div className="post-actions">
+            <div onClick={handleLike} className="action-icon">
+              {isLiked ? (
+                <FaHeart color="#ed4956" size={24} />
+              ) : (
+                <FaRegHeart size={24} />
+              )}
+            </div>
+            <FaRegComment
+              size={24}
+              className="action-icon"
+              onClick={() => onPostClick(post)}
+            />
+          </div>
+
+          <div className="likes-count">
+            <strong>{likes.length} likes</strong>
+          </div>
+
+          <div className="caption">
+            <span className="username">{post.user.username}</span>
+            <span
+              className="caption-text"
+              dangerouslySetInnerHTML={{ __html: post.caption }}
+            ></span>
+            {post.caption?.length > 100 && (
+              <span className="more-link" onClick={() => onPostClick(post)}>
+                {' '}
+                ...more
+              </span>
             )}
           </div>
-          <FaRegComment
-            size={24}
-            className="action-icon"
-            onClick={() => onPostClick(post)}
-          />
+
+          <div className="mini-comments">
+            {post.comments?.slice(-2).map((c, index) => (
+              <div key={index} className="comment-item">
+                <strong>{c.user?.username}</strong>{' '}
+                {renderTruncatedText(c.text, 40)}
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="likes-count">
-          <strong>{likes.length} likes</strong>
-        </div>
-
-        <div className="caption">
-          <span className="username">{post.user.username}</span>
-          <span
-            className="caption-text"
-            dangerouslySetInnerHTML={{ __html: post.caption }}
-          ></span>
-          {post.caption?.length > 100 && (
-            <span className="more-link" onClick={() => onPostClick(post)}>
-              {' '}
-              ...more
-            </span>
-          )}
-        </div>
-
-        {/* Только последние 2 комментария без возможности добавления */}
-        <div className="mini-comments">
-          {post.comments?.slice(-3).map((c, index) => (
-            <div key={index} className="comment-item">
-              <strong>{c.user?.username}</strong>{' '}
-              {renderTruncatedText(c.text, 40)}
-            </div>
-          ))}
-        </div>
-        {/* Ссылка на все комментарии */}
         {post.comments?.length > 0 && (
           <div className="view-all" onClick={() => onPostClick(post)}>
-            View all comments({post.comments.length})
+            View all comments ({post.comments.length})
           </div>
         )}
       </div>
