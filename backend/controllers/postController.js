@@ -3,7 +3,7 @@ import Notification from '../models/Notification.js'
 
 export const createPost = async (req, res) => {
   try {
-    const userId = req.userId // получаем из токена
+    const userId = req.userId
     const { caption, image } = req.body
 
     if (!image) {
@@ -28,8 +28,6 @@ export const createPost = async (req, res) => {
 export const getPosts = async (req, res) => {
   try {
     const { user } = req.query
-    // Создаем объект фильтрации
-    // Если user передан, ищем по нему. Если нет — пустой объект (вернет всё).
     const queryFilter = user ? { user: user } : {}
 
     const posts = await Post.find(queryFilter)
@@ -104,7 +102,6 @@ export const likePost = async (req, res) => {
 
     if (!isLiked) {
       post.likes.push(userId)
-      // Создаем уведомление только если это не свой собственный пост
       if (post.user.toString() !== userId) {
         const notification = new Notification({
           user: post.user,
@@ -148,7 +145,6 @@ export const addComment = async (req, res) => {
 
     await post.save()
 
-    // Возвращаем обновленный пост с подгруженными данными пользователя в комментарии
     const updatedPost = await Post.findById(req.params.id)
       .populate('user', 'username avatar')
       .populate('comments.user', 'username avatar')
@@ -166,23 +162,18 @@ export const likeComment = async (req, res) => {
 
     if (!post) return res.status(404).json({ message: 'Пост не найден' })
 
-    // Находим нужный комментарий в массиве постов
     const comment = post.comments.id(commentId)
     if (!comment)
       return res.status(404).json({ message: 'Комментарий не найден' })
 
-    // Логика лайка (Toggle)
     if (comment.likes.includes(req.userId)) {
-      // Убираем лайк
       comment.likes = comment.likes.filter((id) => id.toString() !== req.userId)
     } else {
-      // Добавляем лайк
       comment.likes.push(req.userId)
     }
 
     await post.save()
 
-    // Возвращаем обновленные комментарии с подгруженными данными пользователей
     const updatedPost = await Post.findById(postId).populate(
       'comments.user',
       'username avatar',

@@ -4,10 +4,9 @@ import Notification from '../models/Notification.js'
 export const searchUsers = async (req, res) => {
   try {
     const search = req.query.search
-    let query = { _id: { $ne: req.userId } } // Исключаем текущего пользователя из выдачи сразу на уровне БД
+    let query = { _id: { $ne: req.userId } }
 
     if (search) {
-      // Если есть поиск, ищем по нику
       query.username = { $regex: search, $options: 'i' }
     }
 
@@ -19,7 +18,6 @@ export const searchUsers = async (req, res) => {
   }
 }
 
-// Получение базовой информации о пользователе (например, для шапки чата)
 export const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('username avatar')
@@ -51,8 +49,6 @@ export const followUser = async (req, res) => {
       currentUser.following = currentUser.following.filter(
         (id) => id.toString() !== req.params.id,
       )
-
-      // (Опционально) Можно удалить уведомление из базы при отписке
       await Notification.findOneAndDelete({
         user: userToFollow._id,
         fromUser: currentUser._id,
@@ -63,18 +59,15 @@ export const followUser = async (req, res) => {
       userToFollow.followers.push(req.userId)
       currentUser.following.push(req.params.id)
 
-      // 1. СОХРАНЯЕМ УВЕДОМЛЕНИЕ В БАЗУ (чтобы оно осталось в истории)
       const newNotification = await Notification.create({
-        user: userToFollow._id, // кому (ID цели)
-        fromUser: currentUser._id, // от кого
+        user: userToFollow._id,
+        fromUser: currentUser._id,
         type: 'follow',
         message: 'начал(а) подписываться на вас',
       })
 
-      // 2. ОТПРАВЛЯЕМ ЧЕРЕЗ SOCKET.IO (для живого обновления)
       const receiverSocketId = req.userSockets[req.params.id]
       if (receiverSocketId) {
-        // Отправляем полные данные, включая ID уведомления из базы
         req.io.to(receiverSocketId).emit('notification', {
           _id: newNotification._id,
           type: 'follow',

@@ -18,7 +18,7 @@ import Chat from './models/Chat.js'
 
 dotenv.config()
 const PORT = process.env.PORT || 5000
-const userSockets = {} // Наша "телефонная книга"
+const userSockets = {}
 
 const app = express()
 const server = http.createServer(app)
@@ -42,14 +42,14 @@ app.use(
   }),
 )
 
-// 3. ПРОКИДЫВАЕМ SOCKET.IO В REQ (Критически важно!)
+// 3. ПРОКИДЫВАЕМ SOCKET.IO В REQ
 app.use((req, res, next) => {
   req.io = io
   req.userSockets = userSockets
   next()
 })
 
-// 4. РОУТЫ (Теперь они имеют доступ к req.io)
+// 4. РОУТЫ
 app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/posts', postRoutes)
@@ -87,10 +87,8 @@ io.on('connection', (socket) => {
 
   socket.on('sendMessage', async ({ chatId, to, message }) => {
     try {
-      // 1. Сохраняем сообщение в БД
       const savedMessage = await saveMessage(socket.userId, to, message, chatId)
 
-      // 2. Обновляем модель Chat (чтобы левая колонка видела последнее сообщение)
       await Chat.findByIdAndUpdate(chatId, {
         lastMessage: {
           text: message,
@@ -99,10 +97,8 @@ io.on('connection', (socket) => {
         },
       })
 
-      // 3. Формируем ID комнаты (лучше использовать chatId из БД, это надежнее)
       const roomId = chatId
 
-      // 4. Отправляем сообщение в комнату
       io.to(roomId).emit('receiveMessage', {
         _id: savedMessage._id,
         chatId: chatId,
@@ -111,7 +107,6 @@ io.on('connection', (socket) => {
         createdAt: savedMessage.createdAt,
       })
 
-      // 5. Уведомление для "счетчика" (если получатель онлайн)
       const receiverSocketId = userSockets[to]
       if (receiverSocketId) {
         io.to(receiverSocketId).emit('notification', {

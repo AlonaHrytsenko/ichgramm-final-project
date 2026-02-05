@@ -89,7 +89,6 @@ const Notifications = ({ isOpen, onClose, onPostClick }) => {
                     <strong>{n.fromUser?.username}</strong>
                   </Link>
 
-                  {/* Логика текстов уведомлений */}
                   {n.type === 'like' && ' liked your photo.'}
                   {n.type === 'comment' && ' commented on your photo.'}
                   {n.type === 'follow' && ' started following you.'}
@@ -97,7 +96,6 @@ const Notifications = ({ isOpen, onClose, onPostClick }) => {
                   <span className="notif-time"> {formatTime(n.createdAt)}</span>
                 </div>
 
-                {/* Если есть пост, показываем миниатюру поста */}
                 {n.post && (
                   <img
                     src={n.post.image}

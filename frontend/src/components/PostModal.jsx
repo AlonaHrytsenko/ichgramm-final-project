@@ -159,7 +159,6 @@ const PostModal = ({
               <Link to={`/profile/${post.user._id}`} className="username-link">
                 <strong>{post.user.username}</strong>
               </Link>
-              {/* 2. ПРОВЕРКА НА СУЩЕСТВОВАНИЕ FOLLOWERS */}
               {currentUserId !== post.user._id && (
                 <>
                   <span>•</span>
@@ -270,7 +269,6 @@ const PostModal = ({
           </div>
 
           <div className="modal-comment-input">
-            {/* Кнопка и выпадающее окно смайликов */}
             <div className="emoji-container" style={{ position: 'relative' }}>
               <button
                 className="emoji-trigger"
@@ -292,8 +290,8 @@ const PostModal = ({
                     <span
                       key={e}
                       onClick={() => {
-                        setComment((prev) => prev + e) // Добавляем смайлик к тексту
-                        setShowEmoji(false) // Закрываем окно
+                        setComment((prev) => prev + e)
+                        setShowEmoji(false)
                       }}
                     >
                       {e}
@@ -316,7 +314,6 @@ const PostModal = ({
         </div>
       </div>
 
-      {/* Меню действий */}
       {showMenu && (
         <div className="action-menu-overlay" onClick={() => setShowMenu(false)}>
           <div

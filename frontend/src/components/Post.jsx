@@ -34,7 +34,7 @@ const Post = ({
   }, [post.user.followers, currentUserId])
 
   const handleLike = async (e) => {
-    e.stopPropagation() // Чтобы не открывалась модалка при клике на лайк
+    e.stopPropagation()
     const token = localStorage.getItem('token')
     try {
       const res = await axios.put(

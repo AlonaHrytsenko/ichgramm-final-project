@@ -36,8 +36,7 @@ const NavBar = ({
           <span>Home</span>
         </Link>
 
-        {/* Кнопка Поиска */}
-        <div
+               <div
           className={`nav-item ${isSearchOpen ? 'active' : ''}`}
           onClick={onSearchClick}
         >
@@ -55,7 +54,7 @@ const NavBar = ({
           <span>Message</span>
         </Link>
 
-        {/* Кнопка Уведомлений */}
+      
         <div
           className={`nav-item ${isNotifOpen ? 'active' : ''}`}
           onClick={onNotificationsClick}

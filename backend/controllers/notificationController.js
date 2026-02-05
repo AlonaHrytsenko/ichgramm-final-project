@@ -1,15 +1,14 @@
 import Notification from '../models/Notification.js'
 
-// Получить все уведомления пользователя
 export const getNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find({ user: req.userId })
-      .populate('fromUser', 'username avatar') // Кто лайкнул
+      .populate('fromUser', 'username avatar')
       .populate({
         path: 'post',
         populate: [
-          { path: 'user', select: 'username avatar followers' }, // Автор поста
-          { path: 'comments.user', select: 'username avatar' }, // Авторы комментов!
+          { path: 'user', select: 'username avatar followers' },
+          { path: 'comments.user', select: 'username avatar' },
         ],
       })
       .sort({ createdAt: -1 })
@@ -19,7 +18,6 @@ export const getNotifications = async (req, res) => {
   }
 }
 
-// Создать новое уведомление
 export const createNotification = async (req, res) => {
   try {
     const { user, type, fromUser, post, message } = req.body
@@ -41,7 +39,6 @@ export const createNotification = async (req, res) => {
   }
 }
 
-// Отметить уведомление как прочитанное
 export const markAsRead = async (req, res) => {
   try {
     const notification = await Notification.findByIdAndUpdate(

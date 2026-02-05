@@ -35,13 +35,11 @@ const Register = () => {
     } catch (err) {
       const serverMsg = err.response?.data?.message || ''
 
-      // Распределяем ошибку от сервера по полям
       if (serverMsg.toLowerCase().includes('email')) {
         setErrors({ email: serverMsg })
       } else if (serverMsg.toLowerCase().includes('username')) {
         setErrors({ username: serverMsg })
       } else {
-        // Общая ошибка, если не подошло под условия
         setErrors({ common: serverMsg || 'Registration error' })
       }
     }

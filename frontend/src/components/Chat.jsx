@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { FaUserCircle } from 'react-icons/fa' // Импортируем иконку
+import { FaUserCircle } from 'react-icons/fa'
 import '../pages/Messages.css'
 
 const Chat = ({ chat, currentUserId, socket }) => {
@@ -14,7 +14,6 @@ const Chat = ({ chat, currentUserId, socket }) => {
   const recipient = chat.participants.find((p) => p._id !== currentUserId)
   const currentUser = chat.participants.find((p) => p._id === currentUserId)
 
-  // Вспомогательная функция для рендеринга аватара
   const renderAvatar = (user, className) => {
     const hasAvatar =
       user?.avatar && user.avatar.trim() !== '' && user.avatar !== 'undefined'
@@ -85,14 +84,12 @@ const Chat = ({ chat, currentUserId, socket }) => {
 
   return (
     <div className="chat-wrapper">
-      {/* 1. ШАПКА ЧАТА */}
       <div className="chat-header">
         {renderAvatar(recipient, 'header-avatar')}
         <span className="header-username">{recipient?.username}</span>
       </div>
 
       <div className="messages-display">
-        {/* 2. ИНФО-БЛОК В ЦЕНТРЕ */}
         <div className="chat-user-info-center">
           {renderAvatar(recipient, 'center-info-avatar')}
           <h3>{recipient?.username}</h3>
@@ -111,13 +108,11 @@ const Chat = ({ chat, currentUserId, socket }) => {
               key={msg._id}
               className={`message-bubble-wrapper ${msg.senderId === currentUserId ? 'own' : 'other'}`}
             >
-              {/* 3. АВАТАР СОБЕСЕДНИКА В СООБЩЕНИИ (слева) */}
               {msg.senderId !== currentUserId &&
                 renderAvatar(recipient, 'msg-mini-avatar')}
 
               <div className="message-bubble">{msg.text}</div>
 
-              {/* 4. МОЙ АВАТАР В СООБЩЕНИИ (справа) */}
               {msg.senderId === currentUserId &&
                 renderAvatar(currentUser, 'msg-mini-avatar')}
             </div>

@@ -4,7 +4,6 @@ import auth from '../middlewares/auth.js'
 
 const router = express.Router()
 
-// Получить историю сообщений конкретного чата по его ID
 router.get('/:chatId', auth, getMessages)
 
 export default router

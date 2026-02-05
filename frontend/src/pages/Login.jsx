@@ -35,12 +35,10 @@ const Login = () => {
   return (
     <div className="auth-page-container">
       <div className="auth-content">
-        {/* Левая часть с картинкой телефонов (скроем на мобилках в CSS) */}
         <div className="auth-visuals">
           <img src={picture} alt="Phones preview" className="phones-img" />
         </div>
 
-        {/* Правая часть с формой */}
         <div className="auth-form-column">
           <div className="auth-card main-card">
             <img src={logo} alt="Logo" />

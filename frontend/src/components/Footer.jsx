@@ -10,7 +10,6 @@ const Footer = ({ onSearchClick, onNotifClick, onCreateClick }) => {
           Home
         </Link>
 
-        {/* Вместо Link используем обработчик клика */}
         <span className="footer-link action-link" onClick={onSearchClick}>
           Search
         </span>
@@ -22,7 +21,6 @@ const Footer = ({ onSearchClick, onNotifClick, onCreateClick }) => {
           Messages
         </Link>
 
-        {/* Обработчик для уведомлений */}
         <span className="footer-link action-link" onClick={onNotifClick}>
           Notifications
         </span>

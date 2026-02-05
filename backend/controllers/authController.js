@@ -6,12 +6,10 @@ export const register = async (req, res) => {
   try {
     const { username, email, password, fullName } = req.body
 
-    // Проверка обязательных полей
     if (!username || !email || !password || !fullName) {
       return res.status(400).json({ message: 'All fields are required' })
     }
 
-    // Проверка, что пользователь с таким email или username не существует
     const existingUser = await User.findOne({ $or: [{ email }, { username }] })
     if (existingUser) {
       return res
@@ -19,10 +17,8 @@ export const register = async (req, res) => {
         .json({ message: 'User with this email or username already exists' })
     }
 
-    // Хэширование пароля
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Создание пользователя
     const user = new User({
       username,
       email,
@@ -62,12 +58,10 @@ export const login = async (req, res) => {
       throw new Error('JWT_SECRET is not defined in environment variables')
     }
 
-    // Генерация токена
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '30d',
     })
 
-    // Убираем пароль из ответа
     const { password: pwd, ...userData } = user._doc
 
     res.json({ token, user: userData })

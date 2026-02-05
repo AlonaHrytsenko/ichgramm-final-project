@@ -153,7 +153,6 @@ const CreatePost = ({ onClose, editData }) => {
             )}
           </div>
 
-          {/* Правая часть: Данные поста */}
           <div className="post-details-section">
             <div
               className="user-info-row"

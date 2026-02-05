@@ -30,8 +30,7 @@ function App() {
   const token = localStorage.getItem('token')
   const currentUserId = localStorage.getItem('userId')
 
-  // --- СОСТОЯНИЯ ---
-  const [posts, setPosts] = useState([]) // Глобальный список постов
+  const [posts, setPosts] = useState([])
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isNotifOpen, setIsNotifOpen] = useState(false)
   const [unreadNotifications, setUnreadNotifications] = useState(0)
@@ -45,7 +44,6 @@ function App() {
     location.pathname === '/register' ||
     location.pathname === '/forgot-password'
 
-  // 1. Загрузка постов при старте
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -58,7 +56,6 @@ function App() {
     fetchPosts()
   }, [])
 
-  // 2. Socket.io логика
   useEffect(() => {
     if (token) {
       socket.auth.token = token
@@ -72,12 +69,13 @@ function App() {
       socket.disconnect()
     }
   }, [token])
+
   useEffect(() => {
-    // Выполняем закрытие в следующем тике событий, чтобы не прерывать рендер страницы
     const closeOnNavigation = () => setSelectedPost(null)
 
     closeOnNavigation()
   }, [location.pathname])
+
   useEffect(() => {
     const fetchCurrentUser = async () => {
       if (token && currentUserId) {
@@ -93,11 +91,8 @@ function App() {
     }
     fetchCurrentUser()
   }, [token, currentUserId])
-  // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
 
-  // Универсальное обновление комментариев/лайков
   const handlePostUpdate = (postId, updatedComments, updatedLikes) => {
-    // Обновляем в основном массиве
     setPosts((prevPosts) =>
       prevPosts.map((p) =>
         p._id === postId
@@ -109,7 +104,6 @@ function App() {
           : p,
       ),
     )
-    // Обновляем в модалке, если она открыта
     setSelectedPost((prev) =>
       prev && prev._id === postId
         ? {
@@ -121,7 +115,6 @@ function App() {
     )
   }
 
-  // Удаление поста
   const handlePostDelete = async (postId) => {
     if (!window.confirm('Are you sure?')) return
     try {
@@ -250,7 +243,6 @@ function App() {
         </Routes>
       </div>
 
-      {/* Глобальная модалка поста */}
       {selectedPost && selectedPost.user && (
         <PostModal
           key={selectedPost._id}
@@ -263,7 +255,7 @@ function App() {
           onEdit={(post) => {
             setEditingPost(post)
             setIsCreateModalOpen(true)
-            setSelectedPost(null) // Закрываем просмотр поста
+            setSelectedPost(null)
           }}
         />
       )}
@@ -271,9 +263,9 @@ function App() {
         <CreatePost
           onClose={() => {
             setIsCreateModalOpen(false)
-            setEditingPost(null) // Очищаем при закрытии
+            setEditingPost(null)
           }}
-          editData={editingPost} // Передаем данные для редактирования
+          editData={editingPost}
         />
       )}
       {!hideComponent && (

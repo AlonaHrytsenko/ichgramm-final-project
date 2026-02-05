@@ -16,7 +16,6 @@ const Messages = ({ socket, currentUser }) => {
   const token = localStorage.getItem('token')
   const { userId } = useParams()
 
-  // Загрузка чатов и пользователей
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -29,7 +28,7 @@ const Messages = ({ socket, currentUser }) => {
           }),
         ])
         setChats(chatsRes.data)
-        setUsers(usersRes.data.filter((u) => u._id !== currentUserId)) // Исключаем себя
+        setUsers(usersRes.data.filter((u) => u._id !== currentUserId))
       } catch (err) {
         console.error('Ошибка загрузки данных:', err)
       }
@@ -37,7 +36,6 @@ const Messages = ({ socket, currentUser }) => {
     fetchData()
   }, [token, currentUserId])
 
-  // Функция создания или открытия существующего чата
   const startChat = async (recipientId) => {
     try {
       const res = await axios.post(
@@ -48,7 +46,6 @@ const Messages = ({ socket, currentUser }) => {
 
       const newChat = res.data
 
-      // Обновляем список чатов, только если такого чата еще нет в списке
       setChats((prevChats) => {
         if (!prevChats.find((c) => c._id === newChat._id)) {
           return [newChat, ...prevChats]
@@ -84,7 +81,7 @@ const Messages = ({ socket, currentUser }) => {
           <span className="current-user-name">
             {currentUser?.username || localStorage.getItem('username')}
           </span>
-          {/* Кнопка "Новый чат" */}
+
           <button
             className="new-chat-btn"
             onClick={() => setIsNewChatOpen(true)}
@@ -160,13 +157,10 @@ const Messages = ({ socket, currentUser }) => {
             socket={socket}
           />
         ) : (
-          <div className="empty-chat-placeholder">
-            {/* ... код заглушки из предыдущего ответа ... */}
-          </div>
+          <div className="empty-chat-placeholder"></div>
         )}
       </div>
 
-      {/* Модалка выбора пользователя */}
       {isNewChatOpen && (
         <div className="new-chat-modal-overlay">
           <div className="new-chat-modal">
