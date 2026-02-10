@@ -203,51 +203,8 @@ function App() {
         onClose={() => setIsNotifOpen(false)}
         onPostClick={handleOpenPostFromNotif}
       />
-
-      <div className="main-content">
+      {hideComponent ? (
         <Routes>
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Feed
-                  posts={posts}
-                  onPostClick={setSelectedPost}
-                  onPostUpdate={handlePostUpdate}
-                  onFollowUpdate={handleFollowUpdate}
-                />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile/:id"
-            element={
-              <ProtectedRoute>
-                <Profile
-                  posts={posts}
-                  onPostUpdate={handlePostUpdate}
-                  onPostClick={setSelectedPost}
-                  onFollowUpdate={handleFollowUpdate}
-                />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/explore"
-            element={
-              <ProtectedRoute>
-                <Explore onPostClick={(post) => setSelectedPost(post)} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/messages/:userId?"
-            element={
-              <ProtectedRoute>
-                <Messages socket={socket} currentUser={currentUser} />
-              </ProtectedRoute>
-            }
-          />
           <Route
             path="/login"
             element={
@@ -272,18 +229,65 @@ function App() {
               </PublicRoute>
             }
           />
-          <Route
-            path="/chat"
-            element={
-              <ProtectedRoute>
-                <Chat />
-              </ProtectedRoute>
-            }
-          />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </div>
-
+      ) : (
+        <div className="main-content">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Feed
+                    posts={posts}
+                    onPostClick={setSelectedPost}
+                    onPostUpdate={handlePostUpdate}
+                    onFollowUpdate={handleFollowUpdate}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile/:id"
+              element={
+                <ProtectedRoute>
+                  <Profile
+                    posts={posts}
+                    onPostUpdate={handlePostUpdate}
+                    onPostClick={setSelectedPost}
+                    onFollowUpdate={handleFollowUpdate}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/explore"
+              element={
+                <ProtectedRoute>
+                  <Explore onPostClick={(post) => setSelectedPost(post)} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/messages/:userId?"
+              element={
+                <ProtectedRoute>
+                  <Messages socket={socket} currentUser={currentUser} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chat"
+              element={
+                <ProtectedRoute>
+                  <Chat />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+      )}
       {selectedPost && selectedPost.user && (
         <PostModal
           key={selectedPost._id}
