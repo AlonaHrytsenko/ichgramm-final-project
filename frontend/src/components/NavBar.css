@@ -6,20 +6,32 @@
   width: 245px;
   z-index: 3000;
   background: #fff;
+}
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+  height: calc(100vh - 158px);
   border-right: 1px solid #dbdbdb;
 }
-
+.logo-container {
+  padding: 10px 25px;
+}
 .logo-link {
-  padding: 25px;
   display: block;
 }
-
+.logo-link img {
+  width: 95px;
+  height: 55px;
+}
 .nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 40px;
   align-items: flex-start;
+  gap: 20px;
   padding-left: 25px;
+  height: 100%;
 }
 
 .nav-item {
@@ -31,6 +43,7 @@
   align-items: center;
   gap: 16px;
   transition: transform 0.2s;
+  font-size: 16px;
 }
 
 .nav-item:hover {
