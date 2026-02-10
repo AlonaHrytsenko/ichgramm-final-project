@@ -19,6 +19,7 @@ import Footer from './components/Footer.jsx'
 import PostModal from './components/PostModal.jsx'
 import ForgotPassword from './pages/ForgotPassword.jsx'
 import NotFound from './pages/NotFound.jsx'
+import { ProtectedRoute, PublicRoute } from './utils/protectedRouts.jsx'
 
 const socket = io('http://localhost:5000', {
   auth: { token: localStorage.getItem('token') },
@@ -208,37 +209,77 @@ function App() {
           <Route
             path="/"
             element={
-              <Feed
-                posts={posts}
-                onPostClick={setSelectedPost}
-                onPostUpdate={handlePostUpdate}
-                onFollowUpdate={handleFollowUpdate}
-              />
+              <ProtectedRoute>
+                <Feed
+                  posts={posts}
+                  onPostClick={setSelectedPost}
+                  onPostUpdate={handlePostUpdate}
+                  onFollowUpdate={handleFollowUpdate}
+                />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/profile/:id"
             element={
-              <Profile
-                posts={posts}
-                onPostUpdate={handlePostUpdate}
-                onPostClick={setSelectedPost}
-                onFollowUpdate={handleFollowUpdate}
-              />
+              <ProtectedRoute>
+                <Profile
+                  posts={posts}
+                  onPostUpdate={handlePostUpdate}
+                  onPostClick={setSelectedPost}
+                  onFollowUpdate={handleFollowUpdate}
+                />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/explore"
-            element={<Explore onPostClick={(post) => setSelectedPost(post)} />}
+            element={
+              <ProtectedRoute>
+                <Explore onPostClick={(post) => setSelectedPost(post)} />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/messages/:userId?"
-            element={<Messages socket={socket} currentUser={currentUser} />}
+            element={
+              <ProtectedRoute>
+                <Messages socket={socket} currentUser={currentUser} />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <ForgotPassword />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
