@@ -182,6 +182,13 @@ function App() {
       return prev
     })
   }
+  const handleLogout = () => {
+    if (window.confirm('Do you realy want to logout?')) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('userId')
+      window.location.href = '/login'
+    }
+  }
   return (
     <div className="app">
       {!hideComponent && (
@@ -318,6 +325,7 @@ function App() {
           onSearchClick={toggleSearch}
           onNotifClick={toggleNotifications}
           onCreateClick={() => setIsCreateModalOpen(true)}
+          onLogout={handleLogout}
         />
       )}
     </div>

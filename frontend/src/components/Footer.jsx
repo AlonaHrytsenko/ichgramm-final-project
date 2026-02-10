@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import './Footer.css'
 
-const Footer = ({ onSearchClick, onNotifClick, onCreateClick }) => {
+const Footer = ({ onSearchClick, onNotifClick, onCreateClick, onLogout }) => {
   return (
     <footer className="footer">
       <nav className="footer-nav">
@@ -10,7 +10,7 @@ const Footer = ({ onSearchClick, onNotifClick, onCreateClick }) => {
           Home
         </Link>
 
-        <span className="footer-link action-link" onClick={onSearchClick}>
+        <span className="footer-link" onClick={onSearchClick}>
           Search
         </span>
 
@@ -21,12 +21,15 @@ const Footer = ({ onSearchClick, onNotifClick, onCreateClick }) => {
           Messages
         </Link>
 
-        <span className="footer-link action-link" onClick={onNotifClick}>
+        <span className="footer-link" onClick={onNotifClick}>
           Notifications
         </span>
 
-        <span className="footer-link action-link" onClick={onCreateClick}>
+        <span className="footer-link" onClick={onCreateClick}>
           Create
+        </span>
+        <span className="footer-link" onClick={onLogout}>
+          Logout
         </span>
       </nav>
 
