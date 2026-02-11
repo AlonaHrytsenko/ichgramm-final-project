@@ -42,7 +42,7 @@ services:
     #    env_file:
     #      - .env
     volumes:
-      - ./data-old:/data/db
+      - ./data:/data/db
     networks:
       - my_net
 
