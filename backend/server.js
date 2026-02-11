@@ -135,7 +135,9 @@ const startServer = async () => {
   try {
     await connectDB()
     console.log('MongoDB connected')
-    server.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+    server.listen(PORT, '0.0.0.0', () =>
+      console.log(`Server started on port ${PORT}`),
+    )
   } catch (error) {
     console.error('Startup error:', error)
     process.exit(1)
