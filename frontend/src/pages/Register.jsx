@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import axios from 'axios'
 import './Auth.css'
 import logo from '../assets/ICHGRAM.jpg'
-
+import { $api } from '../api/api.js'
 const Register = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -29,7 +28,7 @@ const Register = () => {
       return
     }
     try {
-      await axios.post('http://localhost:5000/api/auth/register', formData)
+      await $api.post('/auth/register', formData)
       alert('Регистрация успешна! Войдите в систему.')
       navigate('/login')
     } catch (err) {

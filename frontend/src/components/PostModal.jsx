@@ -9,7 +9,7 @@ import {
   FaUserCircle,
 } from 'react-icons/fa'
 import { formatDistanceToNowStrict } from 'date-fns'
-import axios from 'axios'
+import { $api } from '../api/api.js'
 import smile from '../assets/smile.svg'
 import './PostModal.css'
 
@@ -45,8 +45,8 @@ const PostModal = ({
   const handleLike = async () => {
     const token = localStorage.getItem('token')
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/posts/${post._id}/like`,
+      const res = await $api.put(
+        `/posts/${post._id}/like`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )
@@ -62,8 +62,8 @@ const PostModal = ({
   const handleFollow = async () => {
     const token = localStorage.getItem('token')
     try {
-      const res = await axios.post(
-        `http://localhost:5000/api/users/${post.user._id}/follow`,
+      const res = await $api.post(
+        `/users/${post.user._id}/follow`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )
@@ -80,8 +80,8 @@ const PostModal = ({
     if (!comment.trim()) return
     const token = localStorage.getItem('token')
     try {
-      const res = await axios.post(
-        `http://localhost:5000/api/posts/${post._id}/comment`,
+      const res = await $api.post(
+        `/posts/${post._id}/comment`,
         { text: comment },
         { headers: { Authorization: `Bearer ${token}` } },
       )
@@ -97,8 +97,8 @@ const PostModal = ({
   const handleCommentLike = async (commentId) => {
     const token = localStorage.getItem('token')
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/posts/${post._id}/comments/${commentId}/like`,
+      const res = await $api.put(
+        `/posts/${post._id}/comments/${commentId}/like`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )

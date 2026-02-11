@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import { $api } from '../api/api.js'
 import { useNavigate, Link } from 'react-router-dom'
 import './Auth.css'
 import picture from '../assets/Background.jpg'
@@ -19,7 +19,7 @@ const Login = () => {
       password: password.trim(),
     })
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
+      const res = await $api.post('/auth/login', {
         email: email.trim(),
         password: password.trim(),
       })

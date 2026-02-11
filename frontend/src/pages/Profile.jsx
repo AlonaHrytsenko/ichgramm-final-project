@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { FaUserCircle } from 'react-icons/fa'
-import axios from 'axios'
+import { $api } from '../api/api.js'
 import './Profile.css'
 
 const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
@@ -33,7 +33,7 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/profile/${id}`)
+        const res = await $api.get(`/profile/${id}`)
         setProfile(res.data)
         setEditData({
           username: res.data.username || '',
@@ -52,11 +52,9 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
   const handleSave = async () => {
     if (!token) return alert('You are not logged in')
     try {
-      const res = await axios.put(
-        'http://localhost:5000/api/profile',
-        editData,
-        { headers: { Authorization: `Bearer ${token}` } },
-      )
+      const res = await $api.put('/profile', editData, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       setProfile(res.data)
       setIsEditing(false)
       alert('Profile updated successfully!')
@@ -72,8 +70,8 @@ const Profile = ({ posts, onPostClick, onFollowUpdate }) => {
   const handleFollow = async () => {
     if (!token) return alert('Please log in to follow')
     try {
-      const res = await axios.post(
-        `http://localhost:5000/api/users/${id}/follow`,
+      const res = await $api.post(
+        `/users/${id}/follow`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )

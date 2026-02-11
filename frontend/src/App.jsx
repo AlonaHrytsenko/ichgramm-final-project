@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { io } from 'socket.io-client'
-import axios from 'axios'
 import './App.css'
 
 import NavBar from './components/NavBar'
@@ -20,8 +19,9 @@ import PostModal from './components/PostModal.jsx'
 import ForgotPassword from './pages/ForgotPassword.jsx'
 import NotFound from './pages/NotFound.jsx'
 import { ProtectedRoute, PublicRoute } from './utils/protectedRouts.jsx'
+import { socketURL, $api } from './api/api.js'
 
-const socket = io('http://localhost:5000', {
+const socket = io(socketURL, {
   auth: { token: localStorage.getItem('token') },
   autoConnect: false,
 })
@@ -48,7 +48,7 @@ function App() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/posts')
+        const res = await $api.get('/posts')
         setPosts(res.data)
       } catch (err) {
         console.error('Ошибка загрузки постов:', err)
@@ -81,9 +81,7 @@ function App() {
     const fetchCurrentUser = async () => {
       if (token && currentUserId) {
         try {
-          const res = await axios.get(
-            `http://localhost:5000/api/profile/${currentUserId}`,
-          )
+          const res = await $api.get(`/profile/${currentUserId}`)
           setCurrentUser(res.data)
         } catch (err) {
           console.error('Ошибка при загрузке профиля для NavBar:', err)
@@ -119,7 +117,7 @@ function App() {
   const handlePostDelete = async (postId) => {
     if (!window.confirm('Are you sure?')) return
     try {
-      await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+      await $api.delete(`/posts/${postId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       setPosts((prev) => prev.filter((p) => p._id !== postId))

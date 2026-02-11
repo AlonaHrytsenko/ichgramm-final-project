@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    container_name: backend
+    ports:
+      - '5000:5000'
+      #добавить при запуске env
+    # env_file:
+    #   - .env
+    # depends_on:
+    #   - mongo
+    # volumes:
+    #   - .env:/app/.env
+    networks:
+      - my_net
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    container_name: frontend
+    ports:
+      - '5173:5173'
+    networks:
+      - my_net
+
+  mongo-database:
+    container_name: mongo-database
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    command: --auth --bind_ip 0.0.0.0
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: 'mongo-user'
+    #   MONGO_INITDB_ROOT_PASSWORD: 'password'
+    #   MONGO_INITDB_DATABASE: 'final-project'
+    #    env_file:
+    #      - .env
+    volumes:
+      - ./data:/data/db
+    networks:
+      - my_net
+
+volumes:
+  mongo-data:
+networks:
+  my_net:
+    driver: bridge

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import { $api } from '../api/api.js'
 import Chat from '../components/Chat.jsx'
 import './Messages.css'
 import { useParams } from 'react-router-dom'
@@ -20,10 +20,10 @@ const Messages = ({ socket, currentUser }) => {
     const fetchData = async () => {
       try {
         const [chatsRes, usersRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/chats', {
+          $api.get('/chats', {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get('http://localhost:5000/api/users', {
+          $api.get('/users', {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ])
@@ -38,8 +38,8 @@ const Messages = ({ socket, currentUser }) => {
 
   const startChat = async (recipientId) => {
     try {
-      const res = await axios.post(
-        'http://localhost:5000/api/chats',
+      const res = await $api.post(
+        '/chats',
         { recipientId },
         { headers: { Authorization: `Bearer ${token}` } },
       )

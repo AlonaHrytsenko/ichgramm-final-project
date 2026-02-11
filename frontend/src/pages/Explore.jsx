@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import { $api } from '../api/api.js'
 import './Explore.css'
 
 const Explore = ({ onPostClick }) => {
@@ -9,7 +9,7 @@ const Explore = ({ onPostClick }) => {
   useEffect(() => {
     const fetchExplorePosts = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/posts')
+        const res = await $api.get('/posts')
 
         const shuffled = [...res.data].sort(() => 0.5 - Math.random())
         setPosts(shuffled)

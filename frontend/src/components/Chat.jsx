@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import axios from 'axios'
+import { $api } from '../api/api.js'
 import { useNavigate } from 'react-router-dom'
 import { FaUserCircle } from 'react-icons/fa'
 import '../pages/Messages.css'
@@ -39,10 +39,9 @@ const Chat = ({ chat, currentUserId, socket }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/messages/${chat._id}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        )
+        const res = await $api.get(`/messages/${chat._id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         setMessages(res.data)
       } catch (err) {
         console.error('Ошибка при загрузке сообщений:', err)

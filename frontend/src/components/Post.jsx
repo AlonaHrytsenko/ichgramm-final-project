@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import { $api } from '../api/api.js'
 import { Link } from 'react-router-dom'
 import { FaHeart, FaRegHeart, FaRegComment } from 'react-icons/fa'
 import { formatDistanceToNowStrict } from 'date-fns'
@@ -37,8 +37,8 @@ const Post = ({
     e.stopPropagation()
     const token = localStorage.getItem('token')
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/posts/${post._id}/like`,
+      const res = await $api.put(
+        `/posts/${post._id}/like`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )
@@ -56,8 +56,8 @@ const Post = ({
     e.stopPropagation()
     const token = localStorage.getItem('token')
     try {
-      const res = await axios.post(
-        `http://localhost:5000/api/users/${post.user._id}/follow`,
+      const res = await $api.post(
+        `/users/${post.user._id}/follow`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )

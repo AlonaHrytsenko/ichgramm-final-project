@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import { $api } from '../api/api.js'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { FaUserCircle } from 'react-icons/fa'
 import './Search.css'
@@ -22,9 +22,7 @@ const Search = ({ isOpen, onClose }) => {
         return
       }
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/users?search=${query}`,
-        )
+        const res = await $api.get(`/users?search=${query}`)
         setUsers(res.data)
       } catch (err) {
         console.error('Search error', err)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import axios from 'axios'
+import { $api } from '../api/api.js'
 import { useNavigate } from 'react-router-dom'
 import { FaUserCircle } from 'react-icons/fa'
 import './CreatePost.css'
@@ -26,12 +26,9 @@ const CreatePost = ({ onClose, editData }) => {
     const fetchUserData = async () => {
       if (!userId || !token) return
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/users/${userId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        )
+        const res = await $api.get(`/users/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         setUserName(res.data.username)
 
         const avatarUrl = res.data.avatar
@@ -80,16 +77,16 @@ const CreatePost = ({ onClose, editData }) => {
       const token = localStorage.getItem('token')
 
       if (isEditMode) {
-        await axios.put(
-          `http://localhost:5000/api/posts/${editData._id}`,
+        await $api.put(
+          `/posts/${editData._id}`,
           { caption },
           { headers: { Authorization: `Bearer ${token}` } },
         )
         alert('Post updated!')
       } else {
         const imageData = await fileToBase64(image)
-        await axios.post(
-          'http://localhost:5000/api/posts',
+        await $api.post(
+          '/posts',
           { caption, image: imageData },
           { headers: { Authorization: `Bearer ${token}` } },
         )

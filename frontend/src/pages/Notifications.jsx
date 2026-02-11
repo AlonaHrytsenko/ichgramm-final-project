@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { useLocation, Link } from 'react-router-dom'
 import { FaUserCircle } from 'react-icons/fa'
-import axios from 'axios'
+import { $api } from '../api/api.js'
 import './Notifications.css'
 
 const Notifications = ({ isOpen, onClose, onPostClick }) => {
@@ -21,12 +21,9 @@ const Notifications = ({ isOpen, onClose, onPostClick }) => {
       const fetchNotifications = async () => {
         try {
           const token = localStorage.getItem('token')
-          const res = await axios.get(
-            'http://localhost:5000/api/notifications',
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            },
-          )
+          const res = await $api.get('/notifications', {
+            headers: { Authorization: `Bearer ${token}` },
+          })
           setNotifications(res.data)
         } catch (err) {
           console.error('Ошибка загрузки уведомлений', err)
