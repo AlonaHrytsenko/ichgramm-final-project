@@ -12,7 +12,10 @@ services:
     # env_file:
     #   - .env
     depends_on:
-      - mongo-database
+      # - mongo-database
+      mongo-database:
+        condition: service_healthy
+    restart: 'no'
     # volumes:
     #   - .env:/app/.env
     networks:
@@ -41,6 +44,13 @@ services:
     #   MONGO_INITDB_DATABASE: 'final-project'
     #    env_file:
     #      - .env
+    healthcheck:
+      test: mongosh --eval 'db.runCommand("ping").ok' --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+      # restart: unless-stopped
     volumes:
       - ./data:/data/db
     networks:
