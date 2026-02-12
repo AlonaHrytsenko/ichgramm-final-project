@@ -47,15 +47,16 @@ function App() {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      if (!currentUserId) return
       try {
-        const res = await $api.get('/posts')
+        const res = await $api.get(`/posts?currentUserId=${currentUserId}`)
         setPosts(res.data)
       } catch (err) {
         console.error('Ошибка загрузки постов:', err)
       }
     }
     fetchPosts()
-  }, [])
+  }, [currentUserId])
 
   useEffect(() => {
     if (token) {
@@ -269,7 +270,10 @@ function App() {
               path="/explore"
               element={
                 <ProtectedRoute>
-                  <Explore onPostClick={(post) => setSelectedPost(post)} />
+                  <Explore
+                    currentUserId={currentUserId}
+                    onPostClick={(post) => setSelectedPost(post)}
+                  />
                 </ProtectedRoute>
               }
             />

@@ -1,5 +1,7 @@
 import Post from '../models/Post.js'
 import Notification from '../models/Notification.js'
+import User from '../models/User.js'
+import mongoose from 'mongoose'
 
 export const createPost = async (req, res) => {
   try {
@@ -27,20 +29,47 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
   try {
-    const { user } = req.query
-    const queryFilter = user ? { user: user } : {}
+    const { user, currentUserId, discovery } = req.query;
+    let queryFilter = {};
 
+    // 1. Если запрашиваем посты конкретного пользователя (профиль)
+    if (user) {
+      queryFilter = { user: user };
+    } 
+    // 2. Если мы авторизованы и это лента или Explorer
+    else if (currentUserId && currentUserId !== 'undefined' && currentUserId !== 'null') {
+      const currentUser = await User.findById(currentUserId);
+
+      if (!currentUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Создаем массив ID (себя + тех, на кого подписаны) в формате ObjectId
+      const followingIds = (currentUser.following || []).map(id => new mongoose.Types.ObjectId(id));
+      const myId = new mongoose.Types.ObjectId(currentUserId);
+      const allRelatedIds = [...followingIds, myId];
+
+      if (discovery === 'true') {
+        // Режим Explore: исключаем себя и друзей
+        queryFilter = { user: { $nin: allRelatedIds } };
+      } else {
+        // Режим Feed: только свои и друзей
+        queryFilter = { user: { $in: allRelatedIds } };
+      }
+    }
+
+    // 3. Выполняем поиск с ПРИМЕНЕНИЕМ фильтра
     const posts = await Post.find(queryFilter)
       .populate('user', 'username avatar followers')
       .populate('comments.user', 'username avatar')
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1 });
 
-    res.json(posts)
+    res.json(posts);
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: 'Error fetching posts' })
+    console.error('Ошибка в getPosts:', err);
+    res.status(500).json({ message: 'Server error' });
   }
-}
+};
 export const updatePost = async (req, res) => {
   try {
     const { id } = req.params
