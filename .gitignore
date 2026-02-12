@@ -13,7 +13,9 @@ data/
 dist
 dist-ssr
 *.local
-
+data.tar.gz
+Start_instans.sh
+start_script.sh
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
